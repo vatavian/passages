@@ -1,0 +1,27 @@
+<%= form_with(model: passage, local: true) do |form| %>
+  <% if passage.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(passage.errors.count, "error") %> prohibited this passage from being saved:</h2>
+
+      <ul>
+        <% passage.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :body, "Edit " %>
+    <%= form.rich_text_area :body, id: :passage_body %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Save" %>
+  </div>
+<% end %>

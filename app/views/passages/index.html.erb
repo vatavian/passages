@@ -1,0 +1,52 @@
+<% if notice %>
+<aside id="notice"><%= notice %></aside>
+<% end %>
+
+<h1>Passages</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @passages.each do |passage| %>
+    <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+      <td class="created_at">
+        <code><%= passage.created_at.to_formatted_s(:long) %></code>
+      </td>
+      <td>
+        <% if passage.user %>
+          <%= passage.user.email %>
+        <% end %>
+      </td>
+      <td>
+        <%= truncate(strip_tags(passage.title), length: 60) %>
+      </td>
+      <td class="actions">
+        <ul>
+          <li><%= link_to 'Show', passage %></li>
+          <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
+          <li>
+	    <%=
+	       link_to 'Destroy', 
+	       passage, 
+	       method: :delete,
+	       data: { confirm: 'Really delete ?' } %>
+	  </li>
+        </ul>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3">
+        <%= link_to 'New Passage', new_passage_path %>
+      </td>
+    </tr>
+  </tfoot>
+</table>

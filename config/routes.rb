@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
+  resources :passages
   devise_for :users
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  root to: "home#index"
-
+  root 'passages#index', as: 'passages_index'
 end
