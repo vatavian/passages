@@ -6,8 +6,9 @@
 date_string = Time.now.strftime("%Y-%m-%d_at_%H-%M-%S")
 story_name = "Imported " + date_string
 input_filename = "C:/Users/Mark/Documents/Writing/Treemates/Introduction.html"
+input_css_filename = "C:/Users/Mark/Documents/Writing/Treemates/twine.css"
 output_filename = "C:/Users/Mark/Documents/Twine/Import-Export/export_" + date_string + ".html"
-positions_filename = "C:/Users/Mark/Documents/Twine/Import-Export/Imported 2020-07-27_at_18-04-17.html"
+positions_filename = "C:/Users/Mark/Documents/Twine/Import-Export/Imported 2020-07-28_at_10-35-34.html"
 
 passage_positions = {}
 adjust_x = 0 # 200
@@ -67,36 +68,23 @@ end
 
 File.open(output_filename, "w") do |outfile|
   outfile.puts '<tw-storydata name="' + story_name + '" startnode="1" creator="Twine" creator-version="2.0.11" ifid="5AAD4F80-2BBB-4EAE-B4A5-63F88CF83E2B" format="SugarCube" options="" hidden>'
-  outfile.puts '<style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style>'
+  outfile.print '<style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">'
+  if File.exists? input_css_filename
+    outfile.print File.read(input_css_filename)
+  end
+  outfile.puts '</style>'
   outfile.puts '<script role="script" id="twine-user-script" type="text/twine-javascript"></script>'
 
   File.open(input_filename) do |infile|
     while line = infile.gets
-      line.gsub!('<p align=right>', '==>')
-      line.gsub!(/<p [^>]+>/, "\n")
-      line.gsub!('<p>', "\n") # '<p></p>')
-      line.gsub!('</p>', '')
-      line.gsub!('<li>', '* ') # line.gsub!(%r{(<li>.*)}, '\1</li>') #Instead of closing li, we now replace it
-      line.gsub!(%r{<ul[^>]*>}, '')
-      line.gsub!('</ul>', '')
-      line.gsub!("<em>", "//")
-      line.gsub!("</em>", "//")
-      line.gsub!("<strong>", "''")
-      line.gsub!("</strong>", "''")
-      line.gsub!(%r{<article[^>]*>}, '')
-      line.gsub!('</article>', '')
-      if line.gsub!(%r{<hr[^>]*>}, '</tw-passagedata>')
-        passage_name = nil
-      end
+      line.chomp!
 
-      # Escape some tags so they survive conversion
-      line.gsub!(%r{<(img [^>]*)>}, '&lt;\1&gt;')
-      line.gsub!(%r{<(q[^>]*)>}, '&lt;\1&gt;')
-      line.gsub!('</q>', '&lt;/q&gt;')
-
-      # Link *to* some topics differently so the many links don't clutter the Twine diagram:
+      # Link *to* the top questions topic differently so the many links don't clutter the Twine diagram:
       # (link-goto: "text to show", "passage-name") to omit arrow on diagram in Twine editor
-      line.gsub!(%r{<a href="#(topq|realscience)">(.+?)</a>}, '') # '(link-goto: &quot;\2&quot;, &quot;\1&quot;)')
+      #line.gsub!(%r{<a href="#topq">(.+?)</a>}, '(link-goto: &quot;\1&quot;, &quot;topq&quot;)')
+      # For now we just remove all these link, since the above was not working
+      line.gsub!(%r{<li><a href="#topq">.+?</a>}, '') # also get rid of the preceding <li> tag if it is there
+      line.gsub!(%r{<a href="#topq">.+?</a>}, '')
 
       # Link *from* some topics differently so the many links don't clutter the Twine diagram:      
       if passage_name
@@ -108,9 +96,37 @@ File.open(output_filename, "w") do |outfile|
         end
       end
 
+      line.gsub!('<p align=right>', '==>')
+      line.gsub!(/<p [^>]+>/, "\n")
+      line.gsub!('<p>', "\n\n") # '<p></p>')
+      line.gsub!('</p>', '')
+      # line.gsub!(%r{(<li>.*)}, '\1</li>') #Instead of closing li, we now replace it
+      if line.gsub!('<li>', '* ')
+        line += "\n"
+      end
+      line.gsub!(%r{<ul[^>]*>}, '<br>')
+      line.gsub!('<br>', "\n")
+      line.gsub!('</ul>', "\n")
+      #line.gsub!("<em>", "//")
+      #line.gsub!("</em>", "//")
+      #line.gsub!("<strong>", "''")
+      #line.gsub!("</strong>", "''")
+      line.gsub!(%r{<article[^>]*>}, '')
+      line.gsub!('</article>', '')
+      if line.gsub!(%r{<hr[^>]*>}, '</tw-passagedata>')
+        passage_name = nil
+      end
+
+      # Escape some tags so they survive conversion
+      keep_tags = %w( abbr div em img q span strong u )
+      keep_tags.each { |tag|
+        line.gsub!(%r{<(#{tag}[^>]*)>}, '&lt;\1&gt;')
+        line.gsub!("</#{tag}>", "&lt;/#{tag}&gt;")
+      }
+
       # Tag the start of a passage
       if line.gsub!(%r{<h([1-9]) id="([^"]+)"[^>]*>([^<]+)</h.>}, 
-                    '<tw-passagedata pid="' + passage_id.to_s + '" name="\2" tags="" ' + position + ">\n" + '<h\1>\3' )
+                    '<tw-passagedata pid="' + passage_id.to_s + '" name="\2" tags="" ' + position + ">\n" + '<h\1>\3' + "\n" )
         if passage_name
           puts "Inserting end of passage: " + passage_name + " before " + $2
           line = "</tw-passagedata>\n" + line
@@ -134,7 +150,7 @@ File.open(output_filename, "w") do |outfile|
       end
       line.gsub!('<h1>', '!')
       line.gsub!('<h2>', '!!')
-      outfile.puts line
+      outfile.print line
     end
   end
   puts "Converted " + passage_count.to_s + " passages, wrote " + output_filename
