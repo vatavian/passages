@@ -1,10 +1,15 @@
 class PassagesController < ApplicationController
   before_action :set_passage, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
   # GET /passages
   # GET /passages.json
   def index
-    @passages = Passage.all
+    if params[:filter] == 'mine'
+      @passages = Passage.where(user_id: current_user.id)
+    else
+      @passages = Passage.all
+    end
   end
 
   # GET /passages/1
@@ -15,6 +20,7 @@ class PassagesController < ApplicationController
   # GET /passages/new
   def new
     @passage = Passage.new
+    @passage.user = current_user
   end
 
   # GET /passages/1/edit
@@ -25,6 +31,7 @@ class PassagesController < ApplicationController
   # POST /passages.json
   def create
     @passage = Passage.new(passage_params)
+    @passage.user = current_user
 
     respond_to do |format|
       if @passage.save

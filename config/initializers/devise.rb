@@ -27,6 +27,7 @@ Devise.setup do |config|
   config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
 
   # Configure the class responsible to send e-mails.
+  config.mailer = 'UserMailer'
   # config.mailer = 'Devise::Mailer'
 
   # Configure the parent class responsible to send e-mails.
@@ -244,6 +245,7 @@ config.timeout_in = 1.days # 30.minutes
   # Turn scoped views on. Before rendering "sessions/new", it will first check for
   # "users/sessions/new". It's turned off by default because it's slower if you
   # are using only default views.
+  config.scoped_views = true
   # config.scoped_views = false
 
   # Configure the default scope given to Warden. By default it's the first
@@ -271,6 +273,11 @@ config.timeout_in = 1.days # 30.minutes
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
+
+  # GITHUB_APP_ID = Rails.application.credentials.dig(:github_app_id)
+  # GITHUB_SECRET_ID = Rails.application.credentials.dig(:github_secret_id)
+
+  # config.omniauth :github, GITHUB_APP_ID, GITHUB_SECRET_ID, scope: 'user'
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
   # ==> Warden configuration
