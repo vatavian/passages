@@ -1,3 +1,11 @@
+#class NilClass
+#  def empty?
+#    true
+#  end
+#end
+
+require 'active_support/core_ext/object/blank.rb'
+
 class HtmlToTwine
   def initialize()
     @passage_name = nil     # Name of passage we are currently in the middle of reading
@@ -11,8 +19,9 @@ class HtmlToTwine
     @next_passage_id = 1    # next passage created will get this id
     @passage_count = 0      # number of passages converted during current export operating
 
-    @px = @canvas_min
-    @py = @canvas_min
+    @px = @canvas_min       # x, y position of next passage's icon in the Twine passage display
+    @py = @canvas_min       # 
+    @stop_chomp = 0         # greater than zero indicates that we should not chomp line endings
   end
 
   def export(story_name:, 
@@ -22,6 +31,8 @@ class HtmlToTwine
              existing_positions_filename: nil, 
              ifid: "")
     read_positions(existing_positions_filename)
+    header_line_count = 0
+    body_line_count = 0
 
     File.open(input_filename) do |infile|
       if File.exists? output_filename
@@ -29,19 +40,32 @@ class HtmlToTwine
       end
       File.open(output_filename, "w") do |outfile|
         write_twine_header(story_name:story_name, outfile:outfile, input_css_filename:input_css_filename, ifid:ifid)
-
+        found_body = false
         while line = infile.gets
-          line.chomp!
-          line = convert_links(line)
-          line = convert_tags(line)
-          line = escape_tags(line)
-          line = tag_start_of_passage(line)
-          line = tag_end_of_passage(line)
-          outfile.print line
+          line.chomp! if @stop_chomp == 0
+          if !found_body 
+            found_body = line.match('id="start"')
+            if found_body
+              puts "skipped " + header_line_count.to_s + " header lines"
+            else
+              header_line_count += 1
+            end
+          end
+          if found_body
+            line = convert_links(line)
+            line = convert_tags(line)
+            line = escape_tags(line)
+            line = tag_start_of_passage(line)
+            line = tag_end_of_passage(line)
+            outfile.print line
+            body_line_count += 1
+          end
         end
       end
     end
-    "Converted " + @passage_count.to_s + " passages, wrote " + output_filename
+    puts "Converted " + @passage_count.to_s + " passages"
+    puts "wrote " + body_line_count.to_s + " lines"
+    puts "to " + output_filename
   end
 
   def read_positions(positions_filename)
@@ -79,6 +103,10 @@ class HtmlToTwine
           @py = @canvas_min + @canvas_max / 2 
         end
       end
+    else
+      if !positions_filename.blank?
+        puts "Positions file not found: " + positions_filename
+      end
     end
   end
 
@@ -98,26 +126,26 @@ class HtmlToTwine
       # <a href="#startingpoints">Okay, let's get started!</a>
       # into Twine like this:
       # [[Okay, let's get started!->startingpoints]]
-      # This works if there are no tags in the link text
+      # This works if there are no tags in the link text:
       #line.gsub!(%r{<a href="#([^"]+)">(.+?)</a>}, '[[\2-&gt;\1]]')
-      # This also moves any HTML tags \2 and \4 from inside the href to outside the Twine link
+      # This also moves any HTML tags (\2 and \4) from inside the href to outside the Twine link
       line.gsub!(%r{<a href="#([^"]+)">(<[^/<>]+>)*(.+?)(</[^/<>]+>)*</a>}, '\2[[\3-&gt;\1]]\4')
     end
     line
   end
 
   def convert_tags(line)
-    line.gsub!('<p align=right>', '==>')
-    line.gsub!(/<p [^>]+>/, "\n")
-    line.gsub!('<p>', "\n\n") # '<p></p>')
-    line.gsub!('</p>', '')
-    # line.gsub!(%r{(<li>.*)}, '\1</li>') #Instead of closing li, we now replace it
-    if line.gsub!('<li>', '* ')
-      line = "\n" + line + "\n"
-    end
-    line.gsub!(%r{<ul[^>]*>}, '<br>')
     line.gsub!('<br>', "\n")
-    line.gsub!('</ul>', "\n")
+    #line.gsub!('<p align=right>', '==>')
+    line.gsub!(/<p( [^>]*)*>/, "\n\n")
+    line.gsub!('</p>', '')
+    line.gsub!(%r{(<li>.*)}, "\n" + '\1</li>') # add newline and close li tags
+    #if line.gsub!('<li>', '* ')
+    #  line = "\n" + line + "\n"
+    #end
+    #line.gsub!(%r{<ul[^>]*>}, '<br>')
+    line.gsub!('<ul>', "\n<ul>")
+    line.gsub!('</ul>', "\n</ul>\n")
     #line.gsub!("<em>", "//")
     #line.gsub!("</em>", "//")
     #line.gsub!("<strong>", "''")
@@ -127,10 +155,14 @@ class HtmlToTwine
 
   def escape_tags(line)
     # Escape some tags so they survive conversion
-    keep_tags = %w( abbr div em img q span strong u )
+    keep_tags = %w( abbr div em img pre q span strong s table td tr li ul u )
     keep_tags.each { |tag|
-      line.gsub!(%r{<(#{tag}[^>]*)>}, '&lt;\1&gt;')
-      line.gsub!("</#{tag}>", "&lt;/#{tag}&gt;")
+      if line.gsub!(%r{<(#{tag}( [^>]*)*)>}, '&lt;\1&gt;')
+        @stop_chomp += 1 if tag == "pre"
+      end
+      if line.gsub!("</#{tag}>", "&lt;/#{tag}&gt;")
+        @stop_chomp -= 1 if tag == "pre"
+      end
       if line.match(%r{<#{tag}})
         puts "tried to escape <" + tag + "> but did not find end: " + line
       end
@@ -150,7 +182,7 @@ class HtmlToTwine
     # <tw-passagedata pid="1" name="start" tags="" position="405,223">\n!!Display Title
 
     if line.gsub!(%r{<h([1-9]) id="([^"]+)"[^>]*>([^<]+)</h.>}, 
-                  '<tw-passagedata pid="' + @next_passage_id.to_s + '" name="\2" tags="" ' + next_position + ">\n" + '<h\1>\3' + "\n" )
+                  '<tw-passagedata pid="' + @next_passage_id.to_s + '" name="\2" tags="" ' + next_position + ">\n" + '&lt;h\1&gt;\3&lt;/h\1&gt;' + "\n" )
       if @passage_name
         puts "Inserting end of passage: " + @passage_name + " before " + $2
         line = "</tw-passagedata>\n" + line
@@ -173,9 +205,6 @@ class HtmlToTwine
         end
       end
     end
-    line.gsub!('<h1>', '!')
-    line.gsub!('<h2>', '!!')
-    line.gsub!('<h3>', '!!!')
     line
   end
 
