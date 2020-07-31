@@ -48,13 +48,17 @@ class PassagesController < ApplicationController
   # PATCH/PUT /passages/1.json
   def update
     respond_to do |format|
-      if @passage.update(passage_params)
-        format.html { redirect_to @passage, notice: 'Passage was successfully updated.' }
-        format.json { render :show, status: :ok, location: @passage }
-      else
-        format.html { render :edit }
-        format.json { render json: @passage.errors, status: :unprocessable_entity }
-      end
+      #if @passage.user.id == current_user.id
+        if @passage.update(passage_params)
+          format.html { redirect_to @passage, notice: 'Passage was successfully updated.' }
+          format.json { render :show, status: :ok, location: @passage }
+        else
+          format.html { render :edit }
+          format.json { render json: @passage.errors, status: :unprocessable_entity }
+        end
+      #else
+      #  format.html { redirect_to @passage, notice: 'Cannot updated another user's passage.' }
+      #end
     end
   end
 

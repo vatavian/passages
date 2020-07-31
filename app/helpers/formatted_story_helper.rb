@@ -1,0 +1,2 @@
+module FormattedStoryHelper
+end

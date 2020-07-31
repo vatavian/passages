@@ -23,14 +23,16 @@
     <tr>
       <td colspan="2">
         <ul>
-          <li><%= link_to 'Edit', edit_passage_path(@passage) %></li>
-          <li>
-	    <%=
-	       link_to 'Destroy', 
-	       @passage, 
-	       method: :delete,
-	       data: { confirm: 'Really delete ?' } %>
-	  </li>
+          <% if @passage.user == current_user %>
+            <li><%= link_to 'Edit', edit_passage_path(@passage) %></li>
+            <li>
+              <%=
+                 link_to 'Destroy', 
+                 @passage, 
+                 method: :delete,
+                 data: { confirm: 'Really delete ?' } %>
+            </li>
+          <% end %>
           <li>
             <%= link_to 'New Passage', new_passage_path %>
           </li>

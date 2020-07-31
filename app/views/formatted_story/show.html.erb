@@ -1,0 +1,9 @@
+<%= raw @story.story_format.header %>
+<tw-storydata name="<%= @story.passage.title %>" startnode="1" creator="Passages" creator-version="0" ifid="none" zoom="1" format="<%= @format_name %>" format-version="<%= @format_version %>" options="" hidden>
+<style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style>
+<script role="script" id="twine-user-script" type="text/twine-javascript"></script>
+<tw-passagedata pid="1" name="<%= @story.passage.title %>" tags="" position="100,100" size="100,100">
+<%= raw CGI::escapeHTML(@body) %>
+</tw-passagedata>
+</tw-storydata>
+<%= raw @story.story_format.footer %>

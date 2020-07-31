@@ -1,0 +1,28 @@
+<%= form_with(model: story, local: true) do |form| %>
+  <% if story.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(story.errors.count, "error") %> prohibited this story from being saved:</h2>
+
+      <ul>
+        <% story.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :passage_id, "Starting passage ID" %>
+    <%= form.select :passage_id, Passage.all.collect{|s| [s.user.email + ' ' + s.title, s.id]} %>
+    <%# form.text_field :passage_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :story_format_id %>
+    <%= form.select :story_format_id, StoryFormat.all.collect{|s| [s.name, s.id]} %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

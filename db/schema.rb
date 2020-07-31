@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_24_200749) do
+ActiveRecord::Schema.define(version: 2020_07_31_183809) do
 
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -60,6 +60,26 @@ ActiveRecord::Schema.define(version: 2020_07_24_200749) do
     t.index ["user_id"], name: "index_passages_on_user_id"
   end
 
+  create_table "stories", force: :cascade do |t|
+    t.integer "passage_id", null: false
+    t.integer "user_id", null: false
+    t.integer "story_format_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["passage_id"], name: "index_stories_on_passage_id"
+    t.index ["story_format_id"], name: "index_stories_on_story_format_id"
+    t.index ["user_id"], name: "index_stories_on_user_id"
+  end
+
+  create_table "story_formats", force: :cascade do |t|
+    t.string "name"
+    t.string "author"
+    t.text "header"
+    t.text "footer"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -75,4 +95,7 @@ ActiveRecord::Schema.define(version: 2020_07_24_200749) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "stories", "passages"
+  add_foreign_key "stories", "story_formats"
+  add_foreign_key "stories", "users"
 end

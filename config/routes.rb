@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :stories
+  resources :story_formats
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
@@ -13,6 +15,7 @@ Rails.application.routes.draw do
 
   root to: 'application#home'
   resources :passages
+  get 'formatted_stories/:id', to: 'formatted_story#show', as: 'formatted_stories'
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   # root 'passages#index', as: 'passages_index'
