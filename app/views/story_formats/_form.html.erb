@@ -1,0 +1,37 @@
+<%= form_with(model: story_format, local: true) do |form| %>
+  <% if story_format.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(story_format.errors.count, "error") %> prohibited this story_format from being saved:</h2>
+
+      <ul>
+        <% story_format.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :author %>
+    <%= form.text_field :author %>
+  </div>
+
+  <div class="field">
+    <%= form.label :header %>
+    <%= form.text_area :header %>
+  </div>
+
+  <div class="field">
+    <%= form.label :footer %>
+    <%= form.text_area :footer %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

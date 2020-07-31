@@ -1,0 +1,2 @@
+class StoryFormat < ApplicationRecord
+end

@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Story Formats</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Author</th>
+      <th>Header</th>
+      <th>Footer</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @story_formats.each do |story_format| %>
+      <tr>
+        <td><%= story_format.name %></td>
+        <td><%= story_format.author %></td>
+        <td><%= story_format.header %></td>
+        <td><%= story_format.footer %></td>
+        <td><%= link_to 'Show', story_format %></td>
+        <td><%= link_to 'Edit', edit_story_format_path(story_format) %></td>
+        <td><%= link_to 'Destroy', story_format, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Story Format', new_story_format_path %>
