@@ -21,7 +21,6 @@
         <td><%= link_to 'Show', story %></td>
         <td><%= link_to 'Read', formatted_stories_path(id: story.id), target: "_blank" %>
         <td><%= link_to 'Edit', edit_story_path(story) %></td>
-        <td><%= link_to 'Delete', story, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

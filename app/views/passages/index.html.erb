@@ -30,19 +30,10 @@
         <ul>
           <li><%= link_to 'Show', passage %></li>
           <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
-          <li>
-	    <%=
-	       link_to 'Destroy', 
-	       passage, 
-	       method: :delete,
-	       data: { confirm: 'Really delete ?' } %>
-	  </li>
           <% if @current_story %>
             <li><%= button_to "Add to #{@current_story.name}",
                     story_passages_path(story_id: @current_story.id, passage_id: passage.id) %>
  	    </li>
-          <% else %>
-            <%= passage.user.email %>
           <% end %>
         </ul>
       </td>

@@ -90,12 +90,9 @@ class ImportController < ApplicationController
       end
 
       pid = story_child.attributes["pid"]&.value
-
-      #imported_story.passages << imported_passage
       imported_story.start_passage = imported_passage if pid == start_pid
 
       story_passage_join = StoryPassage.new
-      #story_passage_join.story = imported_story
       story_passage_join.passage = imported_passage
       story_passage_join.sequence = pid
       story_passage_join.tags = story_child.attributes["tags"]&.value

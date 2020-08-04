@@ -2,5 +2,10 @@
 
 <%= render 'form', passage: @passage %>
 
-<%= link_to 'Show', @passage %> |
-<%= link_to 'Index', passages_path %>
+<%# link_to 'Show', @passage %> 
+
+<%= if @passage.user == current_user
+      button_to 'Delete Passage', @passage, method: :delete, data: { confirm: "Delete #{@passage.title}?" }
+    end %>
+
+<%# link_to 'List of Passages', passages_path %>
