@@ -1,23 +1,21 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Name:</strong>
-  <%= @story_format.name %>
+  Name and Version: <%= @story_format.name %> <%= @story_format.version %>
 </p>
 
 <p>
-  <strong>Author:</strong>
-  <%= @story_format.author %>
+  Author: <%= @story_format.author %>
 </p>
 
 <p>
   <strong>Header:</strong>
-  <%= @story_format.header %>
+  <%= truncate(@story_format.header, length: 60) %>
 </p>
 
 <p>
   <strong>Footer:</strong>
-  <%= @story_format.footer %>
+  <%= truncate(@story_format.footer, length: 60) %>
 </p>
 
 <%= link_to 'Edit', edit_story_format_path(@story_format) %> |

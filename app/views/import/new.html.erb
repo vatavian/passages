@@ -1,0 +1,13 @@
+<% if notice %>
+<aside id="notice"><%= notice %></aside>
+<% end %>
+
+<h1>Import a Twine Story</h1>
+
+<p><%= form_for(:import,
+       url: {action: 'create'},
+       html: {multipart: true}) do |form| %>
+If you have a Twine story in an HTML file, you can import it here: <%= form.file_field("uploaded_story") %><br>
+<%= submit_tag("Upload file") %>
+<% end %>
+</p>

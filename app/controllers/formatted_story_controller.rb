@@ -3,13 +3,13 @@ class FormattedStoryController < ApplicationController
   before_action :set_story
 
   def show
-    @body = @story.passage.body.to_s
-    # Skip ActionText's leading and trailing div tags
-    @body = @body[34..-15]
-    Rails.logger.debug "@story.story_format.name = " + @story.story_format.name
-    @format_name, @format_version = @story.story_format.name.split(' ')
-    Rails.logger.debug "@format_name = " + @format_name
-    Rails.logger.debug "@format_version = " + @format_version
+    @header = @story.story_format.header.sub("~~story~~title~~", @story.name)
+    @footer = @story.story_format.footer.sub("~~story~~title~~", @story.name)
+    if @story.start_passage
+      @startpid = @story.start_passage.story_passages.find_by(story_id: @story.id)&.sequence
+    else
+      @startpid = @story.story_passages[0].sequence
+    end
   end
 
   private

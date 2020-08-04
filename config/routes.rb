@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
+  resources :import
   resources :stories
   resources :story_formats
+  resources :story_passages
+
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'

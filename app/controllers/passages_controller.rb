@@ -1,6 +1,7 @@
 class PassagesController < ApplicationController
-  before_action :set_passage, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
+  before_action :set_passage, only: [:show, :edit, :update, :destroy]
+  before_action :set_current_story
 
   # GET /passages
   # GET /passages.json
@@ -73,6 +74,10 @@ class PassagesController < ApplicationController
   end
 
   private
+    def set_current_story
+      @current_story = Story.find_by(id: session[:story_id])
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_passage
       @passage = Passage.find(params[:id])

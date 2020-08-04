@@ -69,6 +69,6 @@ class StoryFormatsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def story_format_params
-      params.require(:story_format).permit(:name, :author, :header, :footer)
+      params.require(:story_format).permit(:name, :version, :author, :header, :footer)
     end
 end

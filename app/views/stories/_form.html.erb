@@ -12,15 +12,69 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :passage_id, "Starting passage ID" %>
-    <%= form.select :passage_id, Passage.all.collect{|s| [s.user.email + ' ' + s.title, s.id]} %>
-    <%# form.text_field :passage_id %>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
   </div>
 
   <div class="field">
     <%= form.label :story_format_id %>
-    <%= form.select :story_format_id, StoryFormat.all.collect{|s| [s.name, s.id]} %>
+    <%= form.select :story_format_id, StoryFormat.all.collect{|s| [s.name + ' ' + s.version, s.id]} %>
   </div>
+
+  <div class="field">
+    <%= form.label :start_passage_id, "Starting passage" %>
+    <%= form.select :start_passage_id, Passage.all.collect{|s| [s.user.email + ' ' + s.title, s.id]} %>
+  </div>
+
+<h2>Story Passages</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Modified</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @story.story_passages.each do |story_passage|
+      passage = story_passage.passage %>
+      <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+        <td>
+          <%= truncate(strip_tags(passage.title), length: 60) %>
+        </td>
+        <td class="updated_at">
+          <code><%= passage.updated_at.to_formatted_s(:long) %></code>
+        </td>
+        <td>
+        </td>
+        <td class="actions">
+          <ul>
+            <li><%= link_to 'Show', passage %></li>
+            <% if @story.user == current_user %>
+              <li><%= link_to 'Remove', story_passage, method: :delete, data:
+                      { confirm: 'Remove passage from story?' } %> </li>
+            <% end %>
+            <% if passage.user == current_user %>
+              <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
+            <% else %>
+              <li><%= passage.user.email %>
+            <% end %>
+          </ul>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3">
+        <%= link_to 'New Passage', new_passage_path %>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
 
   <div class="actions">
     <%= form.submit %>

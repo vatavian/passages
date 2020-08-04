@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Passage:</strong>
-  <%= link_to @story.passage.title, passage_path(@story.passage) %>
+  <strong>Title:</strong>
+  <%= @story.name %>
 </p>
 
 <p>
@@ -12,7 +12,7 @@
 
 <p>
   <strong>Story format:</strong>
-  <%= @story.story_format.name + " by " + @story.story_format.author %>
+  <%= @story.story_format.name + " " + @story.story_format.version + " by " + @story.story_format.author %>
 </p>
 
 <%= link_to 'Read', formatted_stories_path(id: @story.id), target: "_blank" %>

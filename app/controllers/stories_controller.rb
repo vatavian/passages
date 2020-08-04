@@ -1,6 +1,6 @@
 class StoriesController < ApplicationController
-  before_action :set_story, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
+  before_action :set_story, only: [:show, :edit, :update, :destroy]
 
   # GET /stories
   # GET /stories.json
@@ -72,10 +72,11 @@ class StoriesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_story
       @story = Story.find(params[:id])
+      session[:story_id] = @story.id
     end
 
     # Only allow a list of trusted parameters through.
     def story_params
-      params.require(:story).permit(:passage_id, :story_format_id)
+      params.require(:story).permit(:start_passage_id, :story_format_id, :name)
     end
 end
