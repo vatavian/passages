@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Title:</strong>
+  <strong>Name:</strong>
   <%= @story.name %>
 </p>
 
@@ -12,9 +12,22 @@
 
 <p>
   <strong>Story format:</strong>
-  <%= @story.story_format.name + " " + @story.story_format.version + " by " + @story.story_format.author %>
+  <%= @story.story_format&.name.to_s + " " + @story.story_format&.version.to_s + " by " + @story.story_format&.author.to_s %>
 </p>
+<p>
+  <strong>Created:</strong>
+  <code><%= @story.created_at.to_formatted_s(:long) %></code>
+</p>
+<p>
+  <strong>Updated:</strong>
+  <code><%= @story.updated_at.to_formatted_s(:long) %></code>
+</p>
+<p>
+  <strong>Passages:</strong> <%= @story.passages.count.to_s %>
+</p>
+<p><%= link_to 'Read', formatted_stories_path(id: @story.id), target: "_blank" %></p>
+<p><%= link_to 'Edit', edit_story_path(@story) %></p>
+<% if @story.user == current_user %>
+<p><%= link_to 'Add New Passage', new_passage_path %></p>
+<% end %>
 
-<%= link_to 'Read', formatted_stories_path(id: @story.id), target: "_blank" %>
-<%= link_to 'Edit', edit_story_path(@story) %> |
-<%= link_to 'List of Stories', stories_path %>

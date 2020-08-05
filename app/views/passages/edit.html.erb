@@ -5,7 +5,7 @@
 <%# link_to 'Show', @passage %> 
 
 <%= if @passage.user == current_user
-      button_to 'Delete Passage', @passage, method: :delete, data: { confirm: "Delete #{@passage.title}?" }
+      button_to 'Delete Passage', @passage, method: :delete, data: { confirm: "Delete #{@passage.name}?" }
     end %>
 
 <%# link_to 'List of Passages', passages_path %>

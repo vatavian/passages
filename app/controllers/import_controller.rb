@@ -74,17 +74,17 @@ class ImportController < ApplicationController
     def import_passage(story_child, imported_story, start_pid)
       imported_passage = Passage.new
       imported_passage.user = current_user
-      imported_passage.title = story_child.attributes["name"].value
+      imported_passage.name = story_child.attributes["name"].value
       imported_passage.body = story_child.children[0]&.text
 
-      existing_passage = Passage.find_by(title: imported_passage.title, user: current_user)
+      existing_passage = Passage.find_by(name: imported_passage.name, user: current_user)
       if existing_passage
         if existing_passage.body.to_s == imported_passage.body.to_s
           imported_passage = existing_passage
-          Rails.logger.debug "Imported passage identical to existing passage: " + imported_passage.title
+          Rails.logger.debug "Imported passage identical to existing passage: " + imported_passage.name
         else
           imported_passage = nil
-          redirect_to(action: 'new', notice: 'You already have a different passage titled: ' + existing_passage.title)
+          redirect_to(action: 'new', notice: 'You already have a different passage named: ' + existing_passage.name)
           return
         end
       end

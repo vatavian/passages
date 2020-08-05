@@ -2,12 +2,26 @@
 <aside id="notice"><%= notice %></aside>
 <% end %>
 
-<h1><%= @passage.title %></h1>
+<h1><%= @passage.name %></h1>
 <table>
+  <thead>
+    <th>
+      <code>Created</code>
+    </td>
+    <th>
+      <code>Updated</code>
+    </td>
+    <th>
+      <code>User</code>
+    </td>
+  </thead>
   <tbody>
     <tr>
       <td class="created_at">
         <code><%= @passage.created_at.to_formatted_s(:long) %></code>
+      </td>
+      <td class="updated_at">
+        <code><%= @passage.updated_at.to_formatted_s(:long) %></code>
       </td>
       <td>
         <% if @passage.user %>

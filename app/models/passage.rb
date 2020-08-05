@@ -8,7 +8,7 @@ class Passage < ApplicationRecord
     new_passage = Passage.new
     new_passage.user = user
     new_passage.body = body.to_s
-    new_passage.title = title
+    new_passage.name = name
 
     new_passage
   end

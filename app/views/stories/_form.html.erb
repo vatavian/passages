@@ -22,7 +22,7 @@
 
   <div class="field">
     <%= form.label :start_passage_id, "Starting passage" %>
-    <%= form.select :start_passage_id, Passage.all.collect{|s| [s.user.email.to_s + ' ' + s.title.to_s, s.id]} %>
+    <%= form.select :start_passage_id, Passage.all.collect{|s| [s.user.email.to_s + ' ' + s.name.to_s, s.id]} %>
   </div>
 
 <h2>Story Passages</h2>
@@ -41,7 +41,7 @@
       passage = story_passage.passage %>
       <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
         <td>
-          <%= truncate(strip_tags(passage.title), length: 60) %>
+          <%= truncate(strip_tags(passage.name), length: 60) %>
         </td>
         <td class="updated_at">
           <code><%= passage.updated_at.to_formatted_s(:long) %></code>
@@ -68,7 +68,7 @@
   <tfoot>
     <tr>
       <td colspan="3">
-        <%= link_to 'New Passage', new_passage_path %>
+        <%= link_to 'Add New Passage', new_passage_path %>
       </td>
     </tr>
   </tfoot>

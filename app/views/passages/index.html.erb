@@ -2,19 +2,23 @@
 <aside id="notice"><%= notice %></aside>
 <% end %>
 
-<h1>Passages</h1>
+<h1><%= @header_prefix %>Passages</h1>
 
 <table>
   <thead>
     <tr>
-      <th>Title</th>
-      <th colspan="3"></th>
+      <th>Passage Name</th>
+      <th>Created</th>
+      <th>User</th>
     </tr>
   </thead>
 
   <tbody>
     <% @passages.each do |passage| %>
     <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+      <td>
+        <%= truncate(strip_tags(passage.name), length: 60) %>
+      </td>
       <td class="created_at">
         <code><%= passage.created_at.to_formatted_s(:long) %></code>
       </td>
@@ -22,9 +26,6 @@
         <% if passage.user %>
           <%= passage.user.email %>
         <% end %>
-      </td>
-      <td>
-        <%= truncate(strip_tags(passage.title), length: 60) %>
       </td>
       <td class="actions">
         <ul>

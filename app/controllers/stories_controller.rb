@@ -7,8 +7,10 @@ class StoriesController < ApplicationController
   def index
     if params[:filter] == 'mine'
       @stories = Story.where(user_id: current_user.id)
+      @header_prefix = 'My '
     else
       @stories = Story.all
+      @header_prefix = 'All '
     end
   end
 

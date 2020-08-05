@@ -9,8 +9,10 @@ class PassagesController < ApplicationController
   def index
     if params[:filter] == 'mine'
       @passages = Passage.where(user_id: current_user.id)
+      @header_prefix = 'My '
     else
       @passages = Passage.all
+      @header_prefix = 'All '
     end
   end
 
@@ -90,7 +92,7 @@ class PassagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def passage_params
-      params.require(:passage).permit(:title, :body)
+      params.require(:passage).permit(:name, :body)
     end
 
     def new_passage

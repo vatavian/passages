@@ -1,14 +1,14 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Stories</h1>
+<h1><%= @header_prefix %>Stories</h1>
 
 <table>
   <thead>
     <tr>
-      <th>Title</th>
+      <th>Name</th>
       <th>User</th>
       <th>Story format</th>
-      <th colspan="3"></th>
+      <th>Passages</th>
     </tr>
   </thead>
 
@@ -17,7 +17,8 @@
       <tr>
         <td><%= story.name %></td>
         <td><%= story.user&.email %>
-        <td><%= story.story_format&.name %></td>
+        <td><%= story.story_format&.name.to_s + ' ' + story.story_format&.version.to_s %></td>
+        <td><%= story.passages.count.to_s %></td>
         <td><%= link_to 'Show', story %></td>
         <td><%= link_to 'Read', formatted_stories_path(id: story.id), target: "_blank" %>
         <td><%= link_to 'Edit', edit_story_path(story) %></td>

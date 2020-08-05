@@ -4,7 +4,7 @@
 <script role="script" id="twine-user-script" type="text/twine-javascript"><%= @story.try(:script) %></script>
 <% @story.story_passages.order('sequence asc').each do |s_passage| %>
 <tw-passagedata pid="<%= s_passage.sequence
- %>" name="<%= s_passage.passage.title
+ %>" name="<%= s_passage.passage.name
  %>" tags="<%= s_passage.tags
  %>" position="<%= s_passage.position
  %>" size="<%= s_passage.size %>">
