@@ -1,4 +1,4 @@
-<%= form_with(model: story_format, local: true) do |form| %>
+<%= form_with(model: story_format, local: true, html: {multipart: true}) do |form| %>
   <% if story_format.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(story_format.errors.count, "error") %> prohibited this story_format from being saved:</h2>
@@ -24,6 +24,12 @@
   <div class="field">
     <%= form.label :author %>
     <%= form.text_field :author %>
+  </div>
+
+  <div class="field">
+    If you have a Twine story that uses this format, you can upload it here instead of entering header and footer below:
+    <p><%= form.file_field("uploaded_story") %></p>
+    If you get a format from a story, be sure to edit the format to replace the story's name in the header and footer with ~~story~~title~~
   </div>
 
   <div class="field">

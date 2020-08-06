@@ -55,7 +55,7 @@
               <li><%= link_to 'Remove', story_passage, method: :delete, data:
                       { confirm: 'Remove passage from story?' } %> </li>
             <% end %>
-            <% if passage.user == current_user %>
+            <% if passage.user_id == current_user.id %>
               <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
             <% else %>
               <li><%= passage.user.email %>
