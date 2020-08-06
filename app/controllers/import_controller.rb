@@ -31,11 +31,12 @@ class ImportController < ApplicationController
     imported_story.story_format = StoryFormat.for(story_data.attributes["format"].value, 
                                                   story_data.attributes["format-version"].value)
     
-    #imported_passages = []
     story_data.children.each do |story_child|
       case story_child.name
       when "style"
+        imported_story.stylesheet = story_child.content
       when "script"
+        imported_story.script = story_child.content
       when "tw-passagedata"
         if !import_passage(story_child, imported_story, start_pid)
           return
@@ -46,7 +47,6 @@ class ImportController < ApplicationController
     end
     #Rails.logger.debug "Found " + imported_story.passages.count.to_s + " passages in uploaded file " + upload.original_filename
 
-    #binding.pry
     if imported_story.save
       redirect_to imported_story, notice: 'Story was successfully imported.'
     else
@@ -55,7 +55,6 @@ class ImportController < ApplicationController
     return
     
     #Rails.logger.debug "Page title is " + doc.xpath("//title").inner_html
-    #binding.pry
     #start = file_contents.index('<tw-storydata')
     #if start 
     #  Rails.logger.debug file_contents[start..start+40]
@@ -75,7 +74,7 @@ class ImportController < ApplicationController
       imported_passage = Passage.new
       imported_passage.user = current_user
       imported_passage.name = story_child.attributes["name"].value
-      imported_passage.body = story_child.children[0]&.text
+      imported_passage.body = story_child.children[0]&.to_html
 
       existing_passage = Passage.find_by(name: imported_passage.name, user: current_user)
       if existing_passage

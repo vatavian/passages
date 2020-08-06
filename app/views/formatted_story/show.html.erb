@@ -1,15 +1,10 @@
 <%= raw @header %>
 <tw-storydata name="<%= @story.name %>" startnode="<%= @startpid %>" creator="Passages" creator-version="0" ifid="<%= @story.try(:ifid) %>" zoom="1" format="<%= @story.story_format.name %>" format-version="<%= @story.story_format.version %>" options="" hidden>
-<style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"><%= @story.try(:stylesheet) %></style>
-<script role="script" id="twine-user-script" type="text/twine-javascript"><%= @story.try(:script) %></script>
-<% @story.story_passages.order('sequence asc').each do |s_passage| %>
-<tw-passagedata pid="<%= s_passage.sequence
- %>" name="<%= s_passage.passage.name
- %>" tags="<%= s_passage.tags
- %>" position="<%= s_passage.position
- %>" size="<%= s_passage.size %>">
-<%= raw CGI::escapeHTML(s_passage.passage.body.to_s)  #[34..-15] Skip ActionText's leading and trailing div tags
-%>
+<style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"><%= raw @story.try(:stylesheet) %></style>
+<script role="script" id="twine-user-script" type="text/twine-javascript"><%= raw @story.try(:script) %></script>
+<% @story.story_passages.order('sequence asc').each do |story_passage| %>
+<%= raw format_passage_tag(story_passage) %>
+<%= raw format_passage_body(story_passage.passage.body) %>
 </tw-passagedata>
 <% end %>
 </tw-storydata>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_04_232638) do
+ActiveRecord::Schema.define(version: 2020_08_05_190314) do
 
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -69,6 +69,8 @@ ActiveRecord::Schema.define(version: 2020_08_04_232638) do
     t.string "name"
     t.string "ifid"
     t.string "zoom"
+    t.text "stylesheet"
+    t.text "script"
     t.index ["start_passage_id"], name: "index_stories_on_start_passage_id"
     t.index ["story_format_id"], name: "index_stories_on_story_format_id"
     t.index ["user_id"], name: "index_stories_on_user_id"

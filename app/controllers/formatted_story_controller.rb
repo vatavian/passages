@@ -10,6 +10,7 @@ class FormattedStoryController < ApplicationController
     else
       @startpid = @story.story_passages[0].sequence
     end
+    # TODO: embed images: require 'base64' Base64.encode64(data) or strict_encode64
   end
 
   private
