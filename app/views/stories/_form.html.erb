@@ -21,6 +21,21 @@
   </div>
 
   <div class="field">
+    <%= form.label :ifid %>
+    <%= form.text_field :ifid %>
+  </div>
+
+  <div class="field">
+    <%= form.label :stylesheet %>
+    <%= form.text_area :stylesheet %>
+  </div>
+
+  <div class="field">
+    <%= form.label :script %>
+    <%= form.text_area :script %>
+  </div>
+
+  <div class="field">
     <%= form.label :start_passage_id, "Starting passage" %>
     <%= form.select :start_passage_id, @story_passages.collect{|s| [s.passage.user.email.to_s + ' ' + s.passage.name.to_s, s.passage.id]} %>
   </div>
