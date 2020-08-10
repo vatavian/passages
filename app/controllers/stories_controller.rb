@@ -27,6 +27,7 @@ class StoriesController < ApplicationController
 
   # GET /stories/1/edit
   def edit
+    set_story_passages
   end
 
   # POST /stories
@@ -114,5 +115,9 @@ class StoriesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def story_params
       params.require(:story).permit(:start_passage_id, :story_format_id, :name)
+    end
+
+    def set_story_passages
+      @story_passages = @story.story_passages.includes(passage: :user)
     end
 end

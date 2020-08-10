@@ -7,9 +7,11 @@
 <% if @story.user == current_user %>
   <%=  button_to 'Delete Story', @story, method: :delete, data: { confirm: "Delete #{@story.name}?" } %>
 
-  <% if @story.passages.count > 0 %>
+  <%
+     passage_count = @story_passages.length
+     if passage_count > 0 %>
 <p>
-    <%= confirm_prompt = "Delete #{@story.name} and its #{@story.passages.count} passages?"
+    <%= confirm_prompt = "Delete #{@story.name} and its #{passage_count} passages?"
         button_to 'Delete Story and its Passages', story_path(@story, destroy_passages: 'true'), method: :delete, data: { confirm: confirm_prompt } %>
 </p>
   <% end %>

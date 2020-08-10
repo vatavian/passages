@@ -22,14 +22,14 @@ class ImportController < ApplicationController
     end
     imported_story = Story.new
     imported_story.user = current_user
-    imported_story.name = story_data.attributes["name"].value
-    imported_story.ifid = story_data.attributes["ifid"].value
-    imported_story.zoom = story_data.attributes["zoom"].value
+    imported_story.name = story_data.attributes["name"]&.value.to_s
+    imported_story.ifid = story_data.attributes["ifid"]&.value.to_s
+    imported_story.zoom = story_data.attributes["zoom"]&.value.to_s
 
-    start_pid = story_data.attributes["startnode"].value
+    start_pid = story_data.attributes["startnode"]&.value.to_s
 
-    imported_story.story_format = StoryFormat.for(story_data.attributes["format"].value, 
-                                                  story_data.attributes["format-version"].value)
+    imported_story.story_format = StoryFormat.for(story_data.attributes["format"]&.value.to_s, 
+                                                  story_data.attributes["format-version"]&.value.to_s)
     
     story_data.children.each do |story_child|
       case story_child.name

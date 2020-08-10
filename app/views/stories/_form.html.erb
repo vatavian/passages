@@ -22,7 +22,7 @@
 
   <div class="field">
     <%= form.label :start_passage_id, "Starting passage" %>
-    <%= form.select :start_passage_id, Passage.all.collect{|s| [s.user.email.to_s + ' ' + s.name.to_s, s.id]} %>
+    <%= form.select :start_passage_id, @story_passages.collect{|s| [s.passage.user.email.to_s + ' ' + s.passage.name.to_s, s.passage.id]} %>
   </div>
 
 <h2>Story Passages</h2>
@@ -37,7 +37,7 @@
   </thead>
 
   <tbody>
-    <% @story.story_passages.each do |story_passage|
+    <% @story_passages.each do |story_passage|
       passage = story_passage.passage %>
       <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
         <td>
