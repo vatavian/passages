@@ -27,6 +27,7 @@
 </p>
 <p><%= link_to 'Read', formatted_stories_path(id: @story.id), target: "_blank" %></p>
 <p><%= link_to 'Edit', edit_story_path(@story) %></p>
+<p><%= link_to 'Edit Flow', flows_path(id: @story.id) %></p>
 <% if @story.user == current_user %>
 <p><%= link_to 'Add New Passage', new_passage_path %></p>
 <% end %>

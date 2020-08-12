@@ -1,0 +1,4 @@
+npm run build:web
+echo "Copying dist/web to app/assets/javascripts/twine"
+rm -r ../../app/assets/javascripts/twine/*
+cp -a dist/web/* ../../app/assets/javascripts/twine/
