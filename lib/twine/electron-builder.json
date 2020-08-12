@@ -1,0 +1,20 @@
+{
+	"directories": {"output": "dist/electron"},
+	"forceCodeSigning": false,
+	"linux": {
+		"target": "zip"
+	},
+	"mac": {
+		"darkModeSupport": true,
+		"icon": "icons/app.icns",
+		"target": "dmg"
+	},
+	"nsis": {
+		"oneClick": false,
+		"allowToChangeInstallationDirectory": true
+	},
+	"win": {
+		"icon": "icons/app.ico",
+		"target": "nsis"
+	}
+}
