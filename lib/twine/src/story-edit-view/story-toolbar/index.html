@@ -1,5 +1,6 @@
 <div class="toolbar main fullSlideUp fast">
 	<div class="left">
+
 		<a v-link="'/stories'" class="home subtle" title="{{ 'Go to the story list' | say }}"><i class="fa fa-home fa-lg"></i></a>
 
 		<button class="storyName subtle">
@@ -36,6 +37,11 @@
 			<i class="fa fa-play fa-lg"></i>
 			<!-- L10n: The verb form, as in playing a game. -->
 			{{ 'Play' | say }}
+		</button>
+
+		<button class="subtle" @click="push" title="Save to Passages website">
+			<i class="fa fa-lg"></i>
+			Save
 		</button>
 
 		<button class="create" @click="addPassage" title="{{ 'Add a new passage' | say }}">
