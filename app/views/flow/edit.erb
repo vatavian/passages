@@ -1,3 +1,6 @@
 <%= stylesheet_link_tag 'twine/twine.css' %>
 <div id="main"></div>
+<div id="editme" style="display:none">
+<%= render partial: 'formatted_story/form', story: @story %>
+</div>
 <%= javascript_include_tag 'twine/twine' %>

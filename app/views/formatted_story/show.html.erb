@@ -1,11 +1,3 @@
 <%= raw @header %>
-<tw-storydata name="<%= @story.name %>" startnode="<%= @startpid %>" creator="Passages" creator-version="0" ifid="<%= @story.try(:ifid) %>" zoom="1" format="<%= @story.story_format.name %>" format-version="<%= @story.story_format.version %>" options="" hidden>
-<style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"><%= raw @story.try(:stylesheet) %></style>
-<script role="script" id="twine-user-script" type="text/twine-javascript"><%= raw @story.try(:script) %></script>
-<% @story.story_passages.order('sequence asc').each do |story_passage| %>
-<%= raw format_passage_tag(story_passage) %>
-<%= raw format_passage_body(story_passage.passage.body) %>
-</tw-passagedata>
-<% end %>
-</tw-storydata>
+<%= render 'form', story: @story %>
 <%= raw @footer %>
