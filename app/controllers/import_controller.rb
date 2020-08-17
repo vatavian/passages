@@ -1,4 +1,5 @@
 require 'nokogiri'
+require 'securerandom'
 class ImportController < ApplicationController
   before_action :authenticate_user!
   before_action :set_story_xml, only: [:create]
@@ -42,8 +43,12 @@ class ImportController < ApplicationController
     end
   end
 
+  def read_xml_attrib(node, attr_name)
+    node&.attributes[attr_name]&.value.to_s.strip
+  end
+
   def read_story_xml_attrib(attr_name)
-    @story_xml.attributes[attr_name]&.value.to_s.strip
+    read_xml_attrib(@story_xml, attr_name)
   end
 
   def find_story_to_update(ifid, story_name, user)
@@ -73,7 +78,7 @@ class ImportController < ApplicationController
   end
 
   def import_story_xml_children(story)
-    # Set story's stylesheet, script, and passages from @story_xml.children
+    # Set story's stylesheet, script, and passages from @story_xml.children.
     # Return a string containing warning messages for the user separated by newlines.
     warn_msg = ""
     start_pid = read_story_xml_attrib("startnode")
@@ -94,23 +99,28 @@ class ImportController < ApplicationController
     warn_msg
   end
 
-  def import_passage(story_child, imported_story, start_pid)
-    passage_name = story_child&.attributes["name"]&.value.to_s.strip
-    if passage_name.blank?
-      return nil
+  def find_existing_story_passage(story, passage_name, pid)
+    if pid.length == 36
+      passage = Passage.where(user: user, pid: pid).order('created_at DESC').first
+      #find_or_create_by(return 
     end
-    new_passage_body = story_child.children[0]&.to_html
-
+    #
     existing_story_passages = StoryPassage.find_by_sql(
       "select story_passages.* from story_passages, passages where story_passages.story_id='" +
-       imported_story.id.to_s +
-       "' and passages.name='" + passage_name + "'")
+       story.id.to_s + "' and passages.name='" + passage_name + "'")
     if existing_story_passages.empty?
-      existing_story_passage = nil
+      return nil
     else
-      existing_story_passage = existing_story_passages[0]
+      return existing_story_passages[0]
     end
+  end
 
+  def import_passage(story_child, imported_story, start_pid)
+    passage_name = read_xml_attrib(story_child, "name")
+    pid =          read_xml_attrib(story_child, "pid")
+    new_passage_body = story_child.children[0]&.to_html
+
+    existing_story_passage = find_existing_story_passage(imported_story, passage_name, pid)
     same_body = existing_story_passage && new_passage_body == existing_story_passage.passage.body.to_s
 
     if same_body || (existing_story_passage && existing_story_passage.passage.user == current_user)
@@ -118,12 +128,14 @@ class ImportController < ApplicationController
       imported_passage = existing_story_passage.passage
       if same_body
         Rails.logger.debug "Import: passage identical to existing passage: " + imported_passage.name
+        binding.pry
       else
         Rails.logger.debug "Import: new body for passage: " + imported_passage.name
+        binding.pry
         imported_passage.body = new_passage_body
       end
-
-    else
+    else # Need to make a new Passage because didn't have one before or can't edit another user's
+      binding.pry if !skip_pry_new
       imported_passage = Passage.new
       imported_passage.user = current_user
       imported_passage.name = passage_name
@@ -135,13 +147,12 @@ class ImportController < ApplicationController
       Rails.logger.debug "Import: new passage: " + imported_passage.name
     end
 
-    pid = story_child.attributes["pid"]&.value
     imported_story.start_passage = imported_passage if pid == start_pid
 
     story_passage_join.sequence = pid
-    story_passage_join.tags = story_child.attributes["tags"]&.value
-    story_passage_join.position = story_child.attributes["position"]&.value
-    story_passage_join.size = story_child.attributes["size"]&.value
+    story_passage_join.tags =     read_xml_attrib(story_child, "tags")
+    story_passage_join.position = read_xml_attrib(story_child, "position")
+    story_passage_join.size =     read_xml_attrib(story_child, "size")
 
     imported_passage
   end
