@@ -4,4 +4,10 @@ class Story < ApplicationRecord
   belongs_to :story_format
   has_many :story_passages, dependent: :destroy
   has_many :passages, through: :story_passages
+  before_validation :generate_ifid, on: :create
+
+  def generate_ifid
+    self.ifid = securerandom.uuid().upcase if self.ifid.blank?
+  end
+
 end

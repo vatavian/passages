@@ -64,7 +64,7 @@ class ImportController < ApplicationController
     ifid = read_story_xml_attrib("ifid")
     story = find_story_to_update(ifid, story_name, user)
     if story
-      story.ifid = ifid if story.ifid.blank?
+      story.ifid = ifid if !ifid.blank?
     else
       story = Story.new
       story.user = user
@@ -90,6 +90,10 @@ class ImportController < ApplicationController
         if !import_passage(story_child, story, start_pid)
           #warn_msg += "Failed to import passage: " + sanitize(story_child.to_html) + "/n"
           warn_msg += "Failed to import passage: " + story_child.to_s + "/n"
+        end
+      when "text"
+        if !story_child.to_html.strip.blank?
+          warn_msg += "Unexpected text: " + story_child.to_s + "/n"
         end
       else
         #warn_msg += "Unexpected child: " + sanitize(story_child.name) + "/n"
@@ -128,14 +132,11 @@ class ImportController < ApplicationController
       imported_passage = existing_story_passage.passage
       if same_body
         Rails.logger.debug "Import: passage identical to existing passage: " + imported_passage.name
-        binding.pry
       else
         Rails.logger.debug "Import: new body for passage: " + imported_passage.name
-        binding.pry
         imported_passage.body = new_passage_body
       end
     else # Need to make a new Passage because didn't have one before or can't edit another user's
-      binding.pry if !skip_pry_new
       imported_passage = Passage.new
       imported_passage.user = current_user
       imported_passage.name = passage_name
