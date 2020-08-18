@@ -1,6 +1,6 @@
 require 'nokogiri'
-require 'securerandom'
 class ImportController < ApplicationController
+  include FormattedStoryHelper
   before_action :authenticate_user!
   before_action :set_story_xml, only: [:create]
 
@@ -8,14 +8,12 @@ class ImportController < ApplicationController
   end
 
   def create
-    warn_msg = ""
     imported_story = story_from_xml
-    warn_msg += import_story_xml_children(imported_story)
-    note = warn_msg + "Found " + imported_story.passages.count.to_s + " passages in story " + imported_story.name
+    warn_msg = import_story_xml_children(imported_story)
     if imported_story.save
-      redirect_to imported_story, notice: note
+      redirect_to imported_story, notice: warn_msg + imported_story.story_passages.count.to_s + " passages now in story " + imported_story.name
     else
-      redirect_to action: 'new', notice: note + "/nError saving story: " + imported_story.errors.inspect
+      redirect_to action: 'new', notice: warn_msg + "/nError saving story: " + imported_story.errors.inspect
     end
   end
 
@@ -104,19 +102,30 @@ class ImportController < ApplicationController
   end
 
   def find_existing_story_passage(story, passage_name, pid)
-    if pid.length == 36
-      passage = Passage.where(user: user, pid: pid).order('created_at DESC').first
+    # Find an existing story_passage that already has this passage (by pid/uuid or name) in this story.
+    # A passage that is not yet linked to this story via a story_passage is not returned.
+    if pid.length == 36 # find passage by uuid
+      passage = Passage.where(user: current_user, uuid: pid).order('created_at DESC').first
+      if !passage
+        passage = Passage.where(uuid: pid).order('created_at DESC').first
+      end
+      if passage
+        existing_story_passages = StoryPassage.find_by_sql(
+         "select * from story_passages where story_id='" + story.id.to_s +
+                                    "' and passage_id='" + passage.id.to_s + "'")
+        if !existing_story_passages.empty?
+          return existing_story_passages.first
+        end
+      end
       #find_or_create_by(return 
     end
-    #
     existing_story_passages = StoryPassage.find_by_sql(
       "select story_passages.* from story_passages, passages where story_passages.story_id='" +
        story.id.to_s + "' and passages.name='" + passage_name + "'")
-    if existing_story_passages.empty?
-      return nil
-    else
-      return existing_story_passages[0]
+    if !existing_story_passages.empty?
+      return existing_story_passages.first
     end
+    return nil
   end
 
   def import_passage(story_child, imported_story, start_pid)
@@ -124,8 +133,13 @@ class ImportController < ApplicationController
     pid =          read_xml_attrib(story_child, "pid")
     new_passage_body = story_child.children[0]&.to_html
 
+    same_body = false
     existing_story_passage = find_existing_story_passage(imported_story, passage_name, pid)
-    same_body = existing_story_passage && new_passage_body == existing_story_passage.passage.body.to_s
+    if existing_story_passage
+      existing_body = existing_story_passage.passage.body.to_s
+      existing_body = format_passage_body(existing_body)
+      same_body = (new_passage_body.strip == existing_body.strip)
+    end
 
     if same_body || (existing_story_passage && existing_story_passage.passage.user == current_user)
       story_passage_join = existing_story_passage
@@ -134,6 +148,8 @@ class ImportController < ApplicationController
         Rails.logger.debug "Import: passage identical to existing passage: " + imported_passage.name
       else
         Rails.logger.debug "Import: new body for passage: " + imported_passage.name
+        #Rails.logger.debug "Old: '" + existing_story_passage.passage.body.to_s + "'"
+        #Rails.logger.debug "New: '" + new_passage_body + "'"
         imported_passage.body = new_passage_body
       end
     else # Need to make a new Passage because didn't have one before or can't edit another user's
@@ -141,6 +157,7 @@ class ImportController < ApplicationController
       imported_passage.user = current_user
       imported_passage.name = passage_name
       imported_passage.body = new_passage_body
+      imported_passage.uuid = pid if pid.length == 36
 
       story_passage_join = StoryPassage.new
       story_passage_join.passage = imported_passage

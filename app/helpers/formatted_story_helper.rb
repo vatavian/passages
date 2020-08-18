@@ -1,6 +1,6 @@
 module FormattedStoryHelper
   def format_passage_tag(story_passage)
-    '<tw-passagedata pid="' + story_passage.sequence.to_s +
+    '<tw-passagedata pid="' + story_passage.passage.uuid.to_s +
       '" name="' + story_passage.passage.name.to_s +
       '" tags="' + story_passage.tags.to_s +
       '" position="' + story_passage.position.to_s +

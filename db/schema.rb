@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_05_190314) do
+ActiveRecord::Schema.define(version: 2020_08_17_203430) do
 
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(version: 2020_08_05_190314) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
+    t.string "uuid", limit: 36
     t.index ["user_id"], name: "index_passages_on_user_id"
   end
 
