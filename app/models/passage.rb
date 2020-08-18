@@ -4,7 +4,7 @@ class Passage < ApplicationRecord
   has_rich_text :body
   has_many :story_passages, dependent: :destroy
   has_many :stories, through: :story_passages
-  before_validation :generate_uuid, on: :create
+  after_initialize :generate_uuid
 
   def generate_uuid
     self.uuid = SecureRandom.uuid if self.uuid.blank?

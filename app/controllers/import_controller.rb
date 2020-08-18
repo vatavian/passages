@@ -80,12 +80,13 @@ class ImportController < ApplicationController
     # Return a string containing warning messages for the user separated by newlines.
     warn_msg = ""
     start_pid = read_story_xml_attrib("startnode")
+    sequence = 0
     @story_xml.children.each do |story_child|
       case story_child.name
       when "style" then story.stylesheet = story_child.content.to_s.strip
       when "script" then story.script = story_child.content.to_s.strip
       when "tw-passagedata"
-        if !import_passage(story_child, story, start_pid)
+        if !import_passage(story_child, story, start_pid, sequence)
           #warn_msg += "Failed to import passage: " + sanitize(story_child.to_html) + "/n"
           warn_msg += "Failed to import passage: " + story_child.to_s + "/n"
         end
@@ -128,7 +129,7 @@ class ImportController < ApplicationController
     return nil
   end
 
-  def import_passage(story_child, imported_story, start_pid)
+  def import_passage(story_child, imported_story, start_pid, sequence)
     passage_name = read_xml_attrib(story_child, "name")
     pid =          read_xml_attrib(story_child, "pid")
     new_passage_body = story_child.children[0]&.to_html
@@ -167,10 +168,11 @@ class ImportController < ApplicationController
 
     imported_story.start_passage = imported_passage if pid == start_pid
 
-    story_passage_join.sequence = pid
+    story_passage_join.sequence = (sequence+=1).to_s
     story_passage_join.tags =     read_xml_attrib(story_child, "tags")
     story_passage_join.position = read_xml_attrib(story_child, "position")
     story_passage_join.size =     read_xml_attrib(story_child, "size")
+    story_passage_join.save
 
     imported_passage
   end

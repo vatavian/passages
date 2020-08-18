@@ -12,7 +12,7 @@
 
   <div class="field">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, size: 80 %>
   </div>
 
   <div class="field">
@@ -22,7 +22,7 @@
 
   <div class="field">
     <%= form.label :ifid, "IFID" %>
-    <%= form.text_field :ifid %>
+    <%= form.text_field :ifid, size: 40 %>
   </div>
 
   <div class="field">
@@ -36,7 +36,7 @@
   </div>
 
   <div class="field">
-    <%= form.label :start_passage_id, "Starting passage" %>
+    <%= form.label :start_passage_id, "Starting Passage" %>
     <%= form.select :start_passage_id, @story_passages.collect{|s| [s.passage.user.email.to_s + ' ' + s.passage.name.to_s, s.passage.id]} %>
   </div>
 
@@ -66,14 +66,12 @@
         <td class="actions">
           <ul>
             <li><%= link_to 'Show', passage %></li>
-            <% if @story.user == current_user %>
-              <li><%= link_to 'Remove', story_passage, method: :delete, data:
-                      { confirm: 'Remove passage from story?' } %> </li>
-            <% end %>
+            <li><%= link_to 'Remove', story_passage, method: :delete, data:
+                    { confirm: 'Remove passage from story?' } %> </li>
             <% if passage.user_id == current_user.id %>
               <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
             <% else %>
-              <li><%= passage.user.email %>
+              <li><%= link_to 'Copy and Edit', edit_passage_path(passage) %></li>
             <% end %>
           </ul>
         </td>

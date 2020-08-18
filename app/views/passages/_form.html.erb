@@ -13,7 +13,12 @@
 
   <div class="field">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, size: 80  %>
+  </div>
+
+  <div class="field">
+    <%= form.label :uuid, "UUID" %>
+    <%= form.text_field :uuid, size: 40 %>
   </div>
 
   <div class="field">

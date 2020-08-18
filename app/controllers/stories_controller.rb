@@ -1,6 +1,7 @@
 class StoriesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_story, only: [:show, :edit, :update, :destroy]
+  before_action :new_story, only: [:new, :create]
 
   # GET /stories
   # GET /stories.json
@@ -21,8 +22,6 @@ class StoriesController < ApplicationController
 
   # GET /stories/new
   def new
-    @story = Story.new
-    @story.user = current_user
   end
 
   # GET /stories/1/edit
@@ -33,11 +32,9 @@ class StoriesController < ApplicationController
   # POST /stories
   # POST /stories.json
   def create
-    @story = Story.new(story_params)
-    @story.user = current_user
-
     respond_to do |format|
       if @story.save
+        set_session_story
         format.html { redirect_to @story, notice: 'Story was successfully created.' }
         #format.json { render :show, status: :created, location: @story }
       else
@@ -58,7 +55,7 @@ class StoriesController < ApplicationController
         format.html { redirect_to @story, notice: 'Story was successfully updated.' }
         #format.json { render :show, status: :ok, location: @story }
       else
-        format.html { render :edit }
+        format.html { render :edit, notice: 'Update unsuccessful.' }
         #format.json { render json: @story.errors, status: :unprocessable_entity }
       end
     end
@@ -101,12 +98,16 @@ class StoriesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_story
       @story = Story.find(params[:id])
-      # Don't have to be authenticated to get here for show, 
-      # but if we are this story's user, store story ID in session
-      if current_user && current_user.id && @story&.user&.id == current_user.id
+      set_session_story
+    end
+
+    def set_session_story
+      # Don't have to be authenticated to get here, 
+      # but if we are this story's user, store story ID in session.
+      if current_user&.id && @story&.user&.id == current_user.id
         session[:story_id] = @story.id
         session[:story_name] = @story.name
       end
@@ -114,10 +115,21 @@ class StoriesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def story_params
-      params.require(:story).permit(:start_passage_id, :story_format_id, :name)
+      params.require(:story).permit(:name, :story_format_id, :ifid, :stylesheet, :script, :start_passage_id)
     end
 
     def set_story_passages
-      @story_passages = @story.story_passages.includes(passage: :user)
+      @story_passages = @story.story_passages.order('sequence asc').includes(passage: :user)
     end
+
+    def new_story
+      if params[:action] == "new"
+        @story = Story.new
+      else
+        @story = Story.new(story_params)
+      end
+      @story.user = current_user
+      @story_passages = []
+    end
+
 end

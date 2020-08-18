@@ -58,7 +58,7 @@ class PassagesController < ApplicationController
         format.html { redirect_to @passage, notice: success_msg }
         # format.json { render :show, status: :ok, location: @passage }
       else
-        format.html { render :edit }
+        format.html { render :edit, notice: 'Update unsuccessful.' }
         # format.json { render json: @passage.errors, status: :unprocessable_entity }
       end
     end
@@ -92,7 +92,7 @@ class PassagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def passage_params
-      params.require(:passage).permit(:name, :body)
+      params.require(:passage).permit(:name, :body, :uuid)
     end
 
     def new_passage
