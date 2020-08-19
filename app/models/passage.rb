@@ -12,10 +12,11 @@ class Passage < ApplicationRecord
 
   def copy
     new_passage = Passage.new
-    new_passage.user = user
-    new_passage.body = body.to_s
+    new_passage.user_id = user_id
     new_passage.name = name
-    new_passage.uuid = SecureRandom.uuid
+    new_passage.body = body.to_s
+    new_passage.uuid = nil
+    generate_uuid
     new_passage
   end
 end

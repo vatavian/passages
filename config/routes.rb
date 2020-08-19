@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :import
-  resources :stories
+  resources :stories do
+    post 'fork', on: :member
+  end
   resources :story_formats
   resources :story_passages
   resources :flow
@@ -18,7 +20,9 @@ Rails.application.routes.draw do
   end
 
   root to: 'application#home'
-  resources :passages
+  resources :passages do
+    post 'fork', on: :member
+  end
   get 'formatted_stories/:id', to: 'formatted_story#show', as: 'formatted_stories'
   get 'flows/:id', to: 'flow#edit', as: 'flows'
 

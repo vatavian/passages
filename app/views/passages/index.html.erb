@@ -2,23 +2,33 @@
 <aside id="notice"><%= notice %></aside>
 <% end %>
 
-<h1><%= @header_prefix %>Passages</h1>
+<h1><%= @section_title %></h1>
 
 <table>
   <thead>
     <tr>
       <th>Passage Name</th>
       <th>Created</th>
+      <th>Updated</th>
       <th>User</th>
     </tr>
   </thead>
 
   <tbody>
     <% if @current_story 
+         short_story_name = @current_story.name
+         if short_story_name.length > 15
+           short_story_name = short_story_name[0..12] + '...'
+         end
+         add_label = 'Add to ' + short_story_name
+         remove_label = 'Remove from ' + short_story_name
          current_story_passages = {}
          StoryPassage.find_by_sql(
            "select id, passage_id from story_passages where story_id='" +
            @current_story.id.to_s + "'").each { |sp| current_story_passages[sp.passage_id] = sp }
+         if current_story_passages.empty?
+           current_story_passages = nil
+         end
        else
          current_story_passages = nil
        end %>
@@ -29,27 +39,32 @@
         <%= truncate(strip_tags(passage.name), length: 60) %>
       </td>
       <td class="created_at">
-        <code><%= passage.created_at.to_formatted_s(:long) %></code>
+        <code><%= show_date(passage.created_at) %></code>
+      </td>
+      <td class="created_at">
+        <code><%= show_date(passage.updated_at) %></code>
       </td>
       <td>
-        <% if passage.user %>
-          <%= passage.user.email %>
-        <% end %>
+      <%= passage.user&.email %>
       </td>
       <td class="actions">
         <ul>
           <li><%= link_to 'Show', passage %></li>
-          <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
+          <% if passage.user_id == current_user.id %>
+            <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
+          <% else %>
+            <li><%= button_to 'Copy and Edit', fork_passage_path(passage), method: :post %></li>
+          <% end %>
+
           <% if current_story_passages %>
             <li>
-              <% story_passage = current_story_passages[passage.id]
-                 if story_passage %>
-                <%= button_to "Remove from #{@current_story.name}",
-                    story_passage, method: :delete, data:
-                                       { confirm: 'Remove passage from story?' } %>
+              <% story_passage = current_story_passages[passage.id] %>
+              <% if story_passage %>
+                <%= button_to remove_label, story_passage, method: :delete, data:
+                                     { confirm: 'Remove passage from story?' } %>
               <% else %>
-                <%= button_to "Add to #{@current_story.name}",
-                    story_passages_path(story_id: @current_story.id, passage_id: passage.id) %>
+                <%= button_to add_label,
+                  story_passages_path(story_id: @current_story.id, passage_id: passage.id) %>
               <% end %>
  	          </li>
           <% end %>

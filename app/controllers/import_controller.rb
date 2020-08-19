@@ -87,7 +87,6 @@ class ImportController < ApplicationController
       when "script" then story.script = story_child.content.to_s.strip
       when "tw-passagedata"
         if !import_passage(story_child, story, start_pid, sequence)
-          #warn_msg += "Failed to import passage: " + sanitize(story_child.to_html) + "/n"
           warn_msg += "Failed to import passage: " + story_child.to_s + "/n"
         end
       when "text"
@@ -95,7 +94,6 @@ class ImportController < ApplicationController
           warn_msg += "Unexpected text: " + story_child.to_s + "/n"
         end
       else
-        #warn_msg += "Unexpected child: " + sanitize(story_child.name) + "/n"
         warn_msg += "Unexpected child: " + story_child.name + "/n"
       end
     end

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Passages</title>
+    <title>Passages<%= ' - ' + @section_title if @section_title %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -33,7 +33,12 @@
             <% if current_user %>
               <li><a href="/users/edit"><%= current_user.email %></a></li>
               <% if session[:story_name] %>
-              <li><%= link_to session[:story_name], edit_story_path(id: session[:story_id]) %></li>
+              <li><%= link_to session[:story_name], story_path(id: session[:story_id]) %></li>
+              <ul>
+                <li><%= link_to 'Edit', edit_story_path(id: session[:story_id]) %></li>
+                <li><%= link_to 'Flow', flows_path(id: session[:story_id]) %></li>
+                <li><%= link_to 'Read', formatted_stories_path(id: session[:story_id]), target: "_blank" %></li>
+              </ul>
               <% end %>
               <li><%= link_to "My Stories", stories_path(filter: 'mine') %></li>
               <li><%= link_to "My Passages", passages_path(filter: 'mine') %></li>

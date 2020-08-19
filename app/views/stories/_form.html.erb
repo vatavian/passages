@@ -71,7 +71,7 @@
             <% if passage.user_id == current_user.id %>
               <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
             <% else %>
-              <li><%= link_to 'Copy and Edit', edit_passage_path(passage) %></li>
+              <li><%= link_to 'Copy and Edit', fork_passage_path(passage), method: :post %></li>
             <% end %>
           </ul>
         </td>

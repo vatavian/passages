@@ -23,7 +23,12 @@
   <code><%= @story.updated_at.to_formatted_s(:long) %></code>
 </p>
 <p>
-  <strong>Passages:</strong> <%= @story.passages.count.to_s %>
+  <strong>Passages:</strong>
+<% if @story.passages.count > 0 %>
+ <%= link_to 'View list of ' + @story.passages.count.to_s + ' passages', passages_path(filter: 'story_' + @story.id.to_s + "_" + @story.name) %>
+<% else %>
+ None
+<% end %>
 </p>
 <p><%= link_to 'Read', formatted_stories_path(id: @story.id), target: "_blank" %></p>
 <p><%= link_to 'Edit', edit_story_path(@story) %></p>

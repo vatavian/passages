@@ -11,4 +11,17 @@ class Story < ApplicationRecord
     self.ifid = SecureRandom.uuid.upcase if self.ifid.blank?
   end
 
+  def copy
+    new_story = Story.new
+    new_story.user_id = user_id
+    new_story.name = name
+    new_story.start_passage_id = start_passage_id
+    new_story.story_format_id = story_format_id
+    new_story.zoom = zoom
+    new_story.stylesheet = stylesheet
+    new_story.script = script
+    new_story.ifid = nil
+    generate_ifid
+    new_story
+  end
 end

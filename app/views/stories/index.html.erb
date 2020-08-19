@@ -1,6 +1,8 @@
-<p id="notice"><%= notice %></p>
+<% if notice %>
+<aside id="notice"><%= notice %></aside>
+<% end %>
 
-<h1><%= @header_prefix %>Stories</h1>
+<h1><%= @section_title %></h1>
 
 <table>
   <thead>
@@ -21,7 +23,11 @@
         <td><%= story.passages.count.to_s %></td>
         <td><%= link_to 'Show', story %></td>
         <td><%= link_to 'Read', formatted_stories_path(id: story.id), target: "_blank" %>
-        <td><%= link_to 'Edit', edit_story_path(story) %></td>
+        <% if story.user_id == current_user.id %>
+          <td><%= link_to 'Edit', edit_story_path(story) %></td>
+        <% else %>
+          <td><%= link_to 'Copy and Edit', fork_story_path(story), method: :post %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
