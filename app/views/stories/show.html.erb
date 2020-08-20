@@ -16,11 +16,11 @@
 </p>
 <p>
   <strong>Created:</strong>
-  <code><%= @story.created_at.to_formatted_s(:long) %></code>
+  <%= show_timestamp(@story.created_at) %>
 </p>
 <p>
   <strong>Updated:</strong>
-  <code><%= @story.updated_at.to_formatted_s(:long) %></code>
+  <%= show_timestamp(@story.updated_at) %>
 </p>
 <p>
   <strong>Passages:</strong>
@@ -31,9 +31,9 @@
 <% end %>
 </p>
 <p><%= link_to 'Read', formatted_stories_path(id: @story.id), target: "_blank" %></p>
+<% if current_user&.id == @story.user.id %>
 <p><%= link_to 'Edit', edit_story_path(@story) %></p>
 <p><%= link_to 'Edit Flow', flows_path(id: @story.id) %></p>
-<% if @story.user == current_user %>
 <p><%= link_to 'Add New Passage', new_passage_path %></p>
 <% end %>
 

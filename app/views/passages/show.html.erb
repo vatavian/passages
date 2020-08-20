@@ -17,11 +17,11 @@
   </thead>
   <tbody>
     <tr>
-      <td class="created_at">
-        <code><%= @passage.created_at.to_formatted_s(:long) %></code>
+      <td class="timestamp">
+        <%= show_timestamp(@passage.created_at) %>
       </td>
-      <td class="updated_at">
-        <code><%= @passage.updated_at.to_formatted_s(:long) %></code>
+      <td class="timestamp">
+        <%= show_timestamp(@passage.updated_at) %>
       </td>
       <td>
         <% if @passage.user %>
@@ -37,19 +37,18 @@
     <tr>
       <td colspan="2">
         <ul>
-          <% if @passage.user == current_user %>
-            <li><%= link_to 'Edit', edit_passage_path(@passage) %></li>
+          <% if current_user %>
+            <% if current_user.id == @passage.user_id %>
+              <li><%= link_to 'Edit', edit_passage_path(@passage) %></li>
+              <li>
+                <%= link_to 'Destroy', @passage, method: :delete,
+                      data: { confirm: 'Really delete ?' } %>
+              </li>
+            <% end %>
             <li>
-              <%=
-                 link_to 'Destroy', 
-                 @passage, 
-                 method: :delete,
-                 data: { confirm: 'Really delete ?' } %>
+              <%= link_to 'New Passage', new_passage_path %>
             </li>
           <% end %>
-          <li>
-            <%= link_to 'New Passage', new_passage_path %>
-          </li>
           <li>
             <%= link_to 'Index', passages_path %>
           </li>

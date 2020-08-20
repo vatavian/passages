@@ -18,8 +18,10 @@
         <td><%= story_format.version %></td>
         <td><%= story_format.author %></td>
         <td><%= link_to 'Show', story_format %></td>
-        <td><%= link_to 'Edit', edit_story_format_path(story_format) %></td>
-        <td><%= link_to 'Destroy', story_format, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% if current_user %>
+          <td><%= link_to 'Edit', edit_story_format_path(story_format) %></td>
+          <td><%= link_to 'Delete', story_format, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
@@ -27,4 +29,4 @@
 
 <br>
 
-<%= link_to 'New Story Format', new_story_format_path %>
+<%= link_to('New Story Format', new_story_format_path) if current_user %>

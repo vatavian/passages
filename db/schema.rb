@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_17_203430) do
+ActiveRecord::Schema.define(version: 2020_08_19_201042) do
 
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -110,6 +110,11 @@ ActiveRecord::Schema.define(version: 2020_08_17_203430) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "provider"
     t.string "uid"
+    t.string "time_zone", limit: 32, default: "UTC"
+    t.string "date_format_yesterday", limit: 32, default: "Yesterday %-k:%M"
+    t.string "date_format_today", limit: 32, default: "Today %-k:%M"
+    t.string "date_format_this_year", limit: 32, default: "%b %-d %-k:%M"
+    t.string "date_format_other_year", limit: 32, default: "%Y %b %-d %-k:%M"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

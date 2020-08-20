@@ -15,15 +15,17 @@
     <header class="main">
       <aside>
       </aside>
-      <%= image_tag 'logo.svg', alt: 'Passages' %>
-      <h1><%= @page_title %></h1>
+      <%# image_tag 'logo.svg', alt: 'Passages' %>
+      <h1>Passages<%= ' - ' + @section_title if @section_title %></h1>
     </header>
     <section class="content">
       <nav class="side_nav">
         <ul>
+          <!--
           <li><a href="/"><%= t('.home') %></a></li>
           <li><a href="/news"><%= t('.news') %></a></li>
           <li><a href="/contact"><%= t('.contact') %></a></li>
+          -->
           <li><%= link_to "All Stories", stories_path %></li>
           <li><%= link_to "All Passages", passages_path %></li>
           <li><%= link_to "All Story Formats", story_formats_path %></li>
@@ -31,14 +33,13 @@
         <nav class="log_in_out_nav">
           <ul>
             <% if current_user %>
-              <li><a href="/users/edit"><%= current_user.email %></a></li>
+              <li><%= link_to current_user.email, settings_path %></li>
               <% if session[:story_name] %>
-              <li><%= link_to session[:story_name], story_path(id: session[:story_id]) %></li>
-              <ul>
-                <li><%= link_to 'Edit', edit_story_path(id: session[:story_id]) %></li>
-                <li><%= link_to 'Flow', flows_path(id: session[:story_id]) %></li>
-                <li><%= link_to 'Read', formatted_stories_path(id: session[:story_id]), target: "_blank" %></li>
-              </ul>
+              <li><%= link_to session[:story_name], story_path(id: session[:story_id]) %><br>
+              &nbsp;&nbsp;<%= link_to 'Edit', edit_story_path(id: session[:story_id]) %>
+              &nbsp;-&nbsp;<%= link_to 'Flow', flows_path(id: session[:story_id]) %>
+              &nbsp;-&nbsp;<%= link_to 'Read', formatted_stories_path(id: session[:story_id]), target: "_blank" %>
+              </li>
               <% end %>
               <li><%= link_to "My Stories", stories_path(filter: 'mine') %></li>
               <li><%= link_to "My Passages", passages_path(filter: 'mine') %></li>

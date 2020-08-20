@@ -1,0 +1,43 @@
+<%= form_with(model: current_user, url: settings_path, local: true) do |form| %>
+  <% if current_user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(current_user.errors.count, "error") %> prohibited this story from being saved:</h2>
+      <ul>
+        <% current_user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :time_zone %>
+    <%= time_zone_select("user", :time_zone, nil, default: current_user.time_zone) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_format_yesterday %>
+    <%= form.text_field :date_format_yesterday, size: 32 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_format_today %>
+    <%= form.text_field :date_format_today, size: 32 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_format_this_year %>
+    <%= form.text_field :date_format_this_year, size: 32 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_format_other_year %>
+    <%= form.text_field :date_format_other_year, size: 32 %>
+  </div>
+
+  <p><a href="/users/edit">Change password or close account</a></p>
+
+  <div class="actions">
+    <%= form.submit "Save Preferences" %>
+  </div>
+<% end %>

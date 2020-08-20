@@ -58,8 +58,8 @@
         <td>
           <%= truncate(strip_tags(passage.name), length: 60) %>
         </td>
-        <td class="updated_at">
-          <code><%= passage.updated_at.to_formatted_s(:long) %></code>
+        <td class="timestamp">
+          <%= show_timestamp(passage.updated_at) %>
         </td>
         <td>
         </td>
@@ -68,9 +68,9 @@
             <li><%= link_to 'Show', passage %></li>
             <li><%= link_to 'Remove', story_passage, method: :delete, data:
                     { confirm: 'Remove passage from story?' } %> </li>
-            <% if passage.user_id == current_user.id %>
+            <% if current_user&.id == story.user_id %>
               <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
-            <% else %>
+            <% elsif current_user %>
               <li><%= link_to 'Copy and Edit', fork_passage_path(passage), method: :post %></li>
             <% end %>
           </ul>

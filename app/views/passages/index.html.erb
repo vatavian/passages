@@ -2,8 +2,6 @@
 <aside id="notice"><%= notice %></aside>
 <% end %>
 
-<h1><%= @section_title %></h1>
-
 <table>
   <thead>
     <tr>
@@ -38,11 +36,11 @@
       <td>
         <%= truncate(strip_tags(passage.name), length: 60) %>
       </td>
-      <td class="created_at">
-        <code><%= show_date(passage.created_at) %></code>
+      <td class="timestamp">
+        <%= show_timestamp(passage.created_at) %>
       </td>
-      <td class="created_at">
-        <code><%= show_date(passage.updated_at) %></code>
+      <td class="timestamp">
+        <%= show_timestamp(passage.updated_at) %>
       </td>
       <td>
       <%= passage.user&.email %>
@@ -50,9 +48,9 @@
       <td class="actions">
         <ul>
           <li><%= link_to 'Show', passage %></li>
-          <% if passage.user_id == current_user.id %>
+          <% if current_user&.id == passage.user_id %>
             <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
-          <% else %>
+          <% elsif current_user %>
             <li><%= button_to 'Copy and Edit', fork_passage_path(passage), method: :post %></li>
           <% end %>
 
@@ -76,7 +74,9 @@
   <tfoot>
     <tr>
       <td colspan="3">
-        <%= link_to 'New Passage', new_passage_path %>
+        <% if current_user %>
+          <%= link_to 'New Passage', new_passage_path %>
+        <% end %>
       </td>
     </tr>
   </tfoot>

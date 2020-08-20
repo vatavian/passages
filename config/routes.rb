@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resources :story_passages
   resources :flow
 
+  get 'settings', to: 'settings#edit', as: 'settings'
+  patch 'settings', to: 'settings#update'
+
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
