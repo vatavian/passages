@@ -56,3 +56,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'devise'
 #gem 'omniauth-github'
+gem 'bulma-rails', '~> 0.9.0'

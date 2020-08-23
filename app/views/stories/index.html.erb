@@ -1,10 +1,8 @@
+<section class="section">
 <% if notice %>
 <aside id="notice"><%= notice %></aside>
 <% end %>
-
-<h1><%= @section_title %></h1>
-
-<table>
+<table class="bd-spacing-table table">
   <thead>
     <tr>
       <th>Name</th>
@@ -26,7 +24,7 @@
         <% if current_user&.id == story.user_id %>
           <td><%= link_to 'Edit', edit_story_path(story) %></td>
         <% elsif current_user %>
-          <td><%= link_to 'Copy and Edit', fork_story_path(story), method: :post %></td>
+          <td><%= button_to 'Copy and Edit', fork_story_path(story), method: :post, class: "button is-small" %></td>
         <% end %>
       </tr>
     <% end %>
@@ -35,3 +33,4 @@
 
 <p><%= link_to 'Start a New Story', new_story_path %></p>
 <p><%= link_to 'Import a Twine Story', new_import_path %></p>
+</section>

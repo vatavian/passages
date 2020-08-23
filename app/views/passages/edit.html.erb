@@ -1,11 +1,11 @@
-<h1>Editing Passage</h1>
-
+<section class="section">
 <%= render 'form', passage: @passage %>
 
-<%# link_to 'Show', @passage %> 
-
 <%= if @passage.user == current_user
-      button_to 'Delete Passage', @passage, method: :delete, data: { confirm: "Delete #{@passage.name}?" }
+      button_to 'Delete Passage', @passage, method: :delete,
+        class: "button is-danger is-small",
+        data: { confirm: "Delete #{@passage.name}?" }
     end %>
+<%# link_to 'Cancel', @passage %> 
 
-<%# link_to 'List of Passages', passages_path %>
+</section>

@@ -1,3 +1,4 @@
+<section class="section">
 <%= form_with(model: current_user, url: settings_path, local: true) do |form| %>
   <% if current_user.errors.any? %>
     <div id="error_explanation">
@@ -38,6 +39,8 @@
   <p><a href="/users/edit">Change password or close account</a></p>
 
   <div class="actions">
-    <%= form.submit "Save Preferences" %>
+    <%= form.submit "Save Preferences", class: "button" %>
+
   </div>
 <% end %>
+</section>

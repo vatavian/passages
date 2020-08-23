@@ -1,17 +1,21 @@
+<section class="section">
 <%= render 'form', story: @story %>
 
-<%# link_to 'Show', @story %>
-
 <% if @story.user == current_user %>
-  <%=  button_to 'Delete Story', @story, method: :delete, data: { confirm: "Delete #{@story.name}?" } %>
+<p><%=  button_to 'Delete Story', @story, method: :delete,
+       class: "button is-danger is-small",
+       data: { confirm: "Delete #{@story.name}?" } %></p>
 
   <% passage_count = @story_passages&.length
      if passage_count > 0 %>
 <p><%= confirm_prompt = "Delete #{@story.name} and its #{passage_count} passages?"
        button_to 'Delete Story and its Passages',
          story_path(@story, destroy_passages: 'true'),
-         method: :delete, data: { confirm: confirm_prompt } %></p>
+         method: :delete,
+         class: "button is-danger is-small",
+         data: { confirm: confirm_prompt } %></p>
   <% end %>
 <% end %>
 
-<%# link_to 'List of Stories', stories_path %>
+<%# link_to 'Cancel', @story %>
+</section>

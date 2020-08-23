@@ -1,8 +1,9 @@
+<section class="section">
 <% if notice %>
 <aside id="notice"><%= notice %></aside>
 <% end %>
 
-<table>
+<table class="bd-spacing-table table">
   <thead>
     <tr>
       <th>Passage Name</th>
@@ -51,14 +52,14 @@
           <% if current_user&.id == passage.user_id %>
             <li><%= link_to 'Edit', edit_passage_path(passage) %></li>
           <% elsif current_user %>
-            <li><%= button_to 'Copy and Edit', fork_passage_path(passage), method: :post %></li>
+            <li><%= button_to 'Copy and Edit', fork_passage_path(passage), method: :post, class: "button is-small" %></li>
           <% end %>
 
           <% if current_story_passages %>
             <li>
               <% story_passage = current_story_passages[passage.id] %>
               <% if story_passage %>
-                <%= button_to remove_label, story_passage, method: :delete, data:
+                <%= button_to remove_label, story_passage, method: :delete, class: "button is-danger is-small", data:
                                      { confirm: 'Remove passage from story?' } %>
               <% else %>
                 <%= button_to add_label,
@@ -81,3 +82,4 @@
     </tr>
   </tfoot>
 </table>
+</section>

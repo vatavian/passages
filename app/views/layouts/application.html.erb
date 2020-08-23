@@ -8,53 +8,93 @@
     <% if @nocache %>
     <meta name="turbolinks-cache-control" content="no-cache">
     <% end %>
+
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
-  <body>
+  <body class="layout-documentation page-overview">
     <header class="main">
       <aside>
       </aside>
-      <%# image_tag 'logo.svg', alt: 'Passages' %>
-      <h1>Passages<%= ' - ' + @section_title if @section_title %></h1>
     </header>
-    <section class="content">
-      <nav class="side_nav">
-        <ul>
-          <!--
-          <li><a href="/"><%= t('.home') %></a></li>
-          <li><a href="/news"><%= t('.news') %></a></li>
-          <li><a href="/contact"><%= t('.contact') %></a></li>
-          -->
-          <li><%= link_to "All Stories", stories_path %></li>
-          <li><%= link_to "All Passages", passages_path %></li>
-          <li><%= link_to "All Story Formats", story_formats_path %></li>
-        </ul>
-        <nav class="log_in_out_nav">
-          <ul>
-            <% if current_user %>
-              <li><%= link_to current_user.email, settings_path %></li>
-              <% if session[:story_name] %>
-              <li><%= link_to session[:story_name], story_path(id: session[:story_id]) %><br>
-              &nbsp;&nbsp;<%= link_to 'Edit', edit_story_path(id: session[:story_id]) %>
-              &nbsp;-&nbsp;<%= link_to 'Flow', flows_path(id: session[:story_id]) %>
-              &nbsp;-&nbsp;<%= link_to 'Read', formatted_stories_path(id: session[:story_id]), target: "_blank" %>
-              </li>
-              <% end %>
-              <li><%= link_to "My Stories", stories_path(filter: 'mine') %></li>
-              <li><%= link_to "My Passages", passages_path(filter: 'mine') %></li>
-              <li><%= button_to 'Sign out', destroy_user_session_path, method: :delete %></li>
-            <% else %>
-              <li><%= link_to("Log In", sign_in_path) %></li>
-          <% end %>
-          </ul>
-        </nav>
-        <%= Time.now.strftime('%F %H:%M %z') %>
-      </nav>
-      <main class='<%= controller.controller_name %>'>
-        <%= yield %>
-      </main>
-    </section>
-  </body>
+
+<nav id="navbar" class="bd-navbar navbar has-shadow is-spaced">
+  <div class="container">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <h1>Passages<%= ' - ' + @section_title if @section_title %></h1>
+    </a>
+    <div id="navbarBurger" class="navbar-burger burger" data-target="navMenuDocumentation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div id="navMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="<%= stories_path %>">
+        <span>All Stories</span>
+      </a>
+      <a class="navbar-item" href="<%= passages_path %>">
+        <span>All Passages</span>
+      </a>
+      <% if current_user %>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link"><%= current_user.email %></a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="<%= stories_path(filter: 'mine') %>">
+              <span>My Stories</span>
+            </a>
+            <a class="navbar-item" href="<%= passages_path(filter: 'mine') %>">
+              <span>My Passages</span>
+            </a>
+            <a class="navbar-item" href="<%= settings_path %>">
+              <span>Settings</span>
+            </a>
+            <div class="navbar-item">
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <% if session[:story_name] %>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link"><%= session[:story_name] %></a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="<%= formatted_stories_path(id: session[:story_id]) %>" target="_blank">
+              <span>Read</span>
+            </a>
+            <a class="navbar-item" href="<%= story_path(id: session[:story_id]) %>">
+              <span>Show</span>
+            </a>
+            <a class="navbar-item" href="<%= edit_story_path(id: session[:story_id]) %>">
+              <span>Edit</span>
+            </a>
+            <a class="navbar-item" href="<%= flows_path(id: session[:story_id]) %>">
+              <span>Flow Diagram</span>
+            </a>
+          </div>
+        </div>
+      <% end %>
+        
+      <% if current_user %>
+        <%= button_to 'Sign out', destroy_user_session_path, method: :delete, class: "navbar-item button" %>
+      <% else %>
+        <a class="navbar-item" href="<%= sign_in_path %>">
+          <span>Log In</span>
+        </a>
+      <% end %>
+    </div>
+
+  </div>
+  </div>
+</nav>
+
+<main class="bd-main <%= controller.controller_name %>">
+  <%= yield %>
+</main>
+</body>
 </html>
 

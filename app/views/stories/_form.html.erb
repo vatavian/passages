@@ -18,6 +18,7 @@
   <div class="field">
     <%= form.label :story_format_id %>
     <%= form.select :story_format_id, StoryFormat.all.collect{|s| [s.name.to_s + ' ' + s.version.to_s, s.id]} %>
+    <%= link_to "All Story Formats", story_formats_path %>
   </div>
 
   <div class="field">
@@ -42,7 +43,7 @@
 
 <h2>Story Passages</h2>
 
-<table>
+<table class="bd-spacing-table table">
   <thead>
     <tr>
       <th>Name</th>
@@ -89,6 +90,6 @@
 
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Save", class: "button" %>
   </div>
 <% end %>
