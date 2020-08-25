@@ -20,12 +20,10 @@
       </aside>
     </header>
 
-<nav id="navbar" class="bd-navbar navbar has-shadow is-spaced">
+<nav id="navbar" class="bd-navbar navbar has-shadow is-spaced" style="display: inline-flex">
   <div class="container">
   <div class="navbar-brand">
-    <a class="navbar-item" href="/">
-      <h1>Passages<%= ' - ' + @section_title if @section_title %></h1>
-    </a>
+    <a class="navbar-item" href="/"><h3 class="title">Passages</h3></a>
     <div id="navbarBurger" class="navbar-burger burger" data-target="navMenuDocumentation">
       <span></span>
       <span></span>
@@ -93,7 +91,19 @@
 </nav>
 
 <main class="bd-main <%= controller.controller_name %>">
+  <% if flash[:notice] %>
+    <article class="message is-info">
+      <div class="message-body"><%= flash[:notice] %></div>
+    </article>
+  <% end %>
+  <% if @section_title&.index('Flow') != 0 %>
+    <section class="section" style="padding: 0.5rem 1.5rem">
+    <h5 class="subtitle" style="margin-inline-start: 0.5em"><%= @section_title %></h5>
+  <% end %>
   <%= yield %>
+  <% if @section_title&.index('Flow') != 0 %>
+    </section>
+  <% end %>
 </main>
 </body>
 </html>

@@ -1,38 +1,26 @@
-<section class="section">
 <%= form_with(model: current_user, url: settings_path, local: true) do |form| %>
-  <% if current_user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(current_user.errors.count, "error") %> prohibited this story from being saved:</h2>
-      <ul>
-        <% current_user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="field">
-    <%= form.label :time_zone %>
+    <%= form.label :time_zone %><br>
     <%= time_zone_select("user", :time_zone, nil, default: current_user.time_zone) %>
   </div>
 
   <div class="field">
-    <%= form.label :date_format_yesterday %>
+    <%= form.label :date_format_yesterday %><br>
     <%= form.text_field :date_format_yesterday, size: 32 %>
   </div>
 
   <div class="field">
-    <%= form.label :date_format_today %>
+    <%= form.label :date_format_today %><br>
     <%= form.text_field :date_format_today, size: 32 %>
   </div>
 
   <div class="field">
-    <%= form.label :date_format_this_year %>
+    <%= form.label :date_format_this_year %><br>
     <%= form.text_field :date_format_this_year, size: 32 %>
   </div>
 
   <div class="field">
-    <%= form.label :date_format_other_year %>
+    <%= form.label :date_format_other_year %><br>
     <%= form.text_field :date_format_other_year, size: 32 %>
   </div>
 
@@ -43,4 +31,3 @@
 
   </div>
 <% end %>
-</section>

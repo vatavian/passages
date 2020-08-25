@@ -1,53 +1,39 @@
-<% if notice %>
-<aside id="notice"><%= notice %></aside>
-<% end %>
+<p>
+  <strong>Name:</strong>
+  <%= @passage.name %>
+</p>
 
-<h1><%= @passage.name %></h1>
-<table class="bd-spacing-table table">
-  <thead>
-    <th>Created</th>
-    <th>Updated</th>
-    <th>User</th>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="timestamp">
-        <%= show_timestamp(@passage.created_at) %>
-      </td>
-      <td class="timestamp">
-        <%= show_timestamp(@passage.updated_at) %>
-      </td>
-      <td>
-        <% if @passage.user %>
-        <%= @passage.user.email %>
-        <% end %>
-      </td>
-    </tr>
-    <tr colspan="2">
-      <%= @passage.body %>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <td colspan="2">
-        <ul>
-          <% if current_user %>
-            <% if current_user.id == @passage.user_id %>
-              <li><%= link_to 'Edit', edit_passage_path(@passage) %></li>
-              <li>
-                <%= link_to 'Destroy', @passage, method: :delete,
-                      data: { confirm: 'Really delete ?' } %>
-              </li>
-            <% end %>
-            <li>
-              <%= link_to 'New Passage', new_passage_path %>
-            </li>
-          <% end %>
-          <li>
-            <%= link_to 'Index', passages_path %>
-          </li>
-        </ul>
-      </td>
-    </tr>
-  </tfoot>
-</table>
+<p>
+  <strong>Body:</strong>
+  <div class="message is-dark message-body"><%= @passage.body.to_s %></div>
+</p>
+<p>
+  <strong>Created:</strong>
+  <%= show_timestamp(@passage.created_at) %>
+</p>
+<p>
+  <strong>Updated:</strong>
+  <%= show_timestamp(@passage.updated_at) %>
+</p>
+<p>
+  <strong>User:</strong>
+  <%= @passage.user&.email %>
+</p>
+
+<ul>
+<% if current_user %>
+  <% if current_user.id == @passage.user_id %>
+    <li><%= link_to 'Edit', edit_passage_path(@passage) %></li>
+    <li>
+      <%= link_to 'Destroy', @passage, method: :delete,
+            data: { confirm: 'Really delete ?' } %>
+    </li>
+  <% end %>
+  <li>
+    <%= link_to 'New Passage', new_passage_path %>
+  </li>
+<% end %>
+  <li>
+    <%= link_to 'Index', passages_path %>
+  </li>
+</ul>

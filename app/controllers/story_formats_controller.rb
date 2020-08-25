@@ -6,20 +6,24 @@ class StoryFormatsController < ApplicationController
   # GET /story_formats.json
   def index
     @story_formats = StoryFormat.all
+    @section_title = 'Story Formats'
   end
 
   # GET /story_formats/1
   # GET /story_formats/1.json
   def show
+    @section_title = @story_format.name + ' ' + @story_format.version
   end
 
   # GET /story_formats/new
   def new
     @story_format = StoryFormat.new
+    @section_title = 'New Story Format'
   end
 
   # GET /story_formats/1/edit
   def edit
+    @section_title = 'Edit ' + @story_format.name + ' ' + @story_format.version
   end
 
   # POST /story_formats

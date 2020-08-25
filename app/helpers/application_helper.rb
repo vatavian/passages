@@ -1,6 +1,7 @@
 module ApplicationHelper
-  def show_timestamp(dt)
-    now = Time.now
+  def show_timestamp(utc_date)
+    dt = utc_date.getlocal
+    now = Time.now.getlocal
     if dt.year == now.year
       if dt.month == now.month && dt.day == now.day
         dt_format = current_user&.date_format_today || "Today %-k:%M"
