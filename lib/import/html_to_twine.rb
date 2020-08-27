@@ -155,7 +155,7 @@ class HtmlToTwine
 
   def escape_tags(line)
     # Escape some tags so they survive conversion
-    keep_tags = %w( abbr div em img pre q span strong s table td tr li ul u )
+    keep_tags = %w( abbr div em img pre q span strong s table td th tr li ul u )
     keep_tags.each { |tag|
       if line.gsub!(%r{<(#{tag}( [^>]*)*)>}, '&lt;\1&gt;')
         @stop_chomp += 1 if tag == "pre"
