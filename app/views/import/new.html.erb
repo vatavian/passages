@@ -2,7 +2,7 @@
        url: {action: 'create'},
        html: {multipart: true}) do |form| %>
 If you have a Twine story or a Project Gutenberg text in an HTML file, you can import it here: <br>
-<%= form.file_field("uploaded_story") %><br>
-<%= submit_tag("Upload file")  %>
+<%= form.file_field("uploaded_files", multiple: true) %><br>
+<%= submit_tag("Upload") %>
 <% end %>
 </p>

@@ -1,17 +1,24 @@
 class ImportTwineHtml
   include FormattedStoryHelper
-  def cant_import(input_text, xml_doc)
+  def start_import(input_text, xml_doc, input_filename, user, err_msgs)
     if @story_xml = xml_doc&.at_css("tw-storydata")
-      nil
+      @story = story_from_xml(user)
+      continue_import(input_text, xml_doc, input_filename, user, err_msgs)
+      return true
     else
-      'tw-storydata not found.'
+      err_msgs << 'tw-storydata not found.'
+      return false
     end
   end
 
-  def import_story(user)
-    imported_story = story_from_xml(user)
-    warn_msg = import_story_xml_children(imported_story, user)
-    return imported_story, warn_msg
+  def continue_import(input_text, xml_doc, input_filename, user, err_msgs)
+    @story_xml = xml_doc&.at_css("tw-storydata")
+    err_msgs << import_story_xml_children(@story, user)
+    nil
+  end
+
+  def finish_import(err_msgs)
+    @story
   end
 
   def read_xml_attrib(node, attr_name)

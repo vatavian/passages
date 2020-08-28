@@ -53,7 +53,7 @@ class PassagesController < ApplicationController
   def create
     respond_to do |format|
       if @passage.save
-        format.html { redirect_to @passage, notice: 'Passage was successfully created.' }
+        format.html { redirect_to @passage, notice: 'Passage created.' }
         # format.json { render :show, status: :created, location: @passage }
       else
         format.html { render :new }
@@ -67,10 +67,11 @@ class PassagesController < ApplicationController
   def update
     respond_to do |format|
       if @passage.update(passage_params)
-        format.html { redirect_to @passage, notice: 'Passage was successfully updated.' }
+binding.pry
+        format.html { redirect_to @passage, notice: 'Passage updated.' }
         # format.json { render :show, status: :ok, location: @passage }
       else
-        format.html { render :edit, notice: 'Update unsuccessful.' }
+        format.html { render :edit, notice: 'Update failed.' }
         # format.json { render json: @passage.errors, status: :unprocessable_entity }
       end
     end
@@ -79,15 +80,14 @@ class PassagesController < ApplicationController
   # DELETE /passages/1
   # DELETE /passages/1.json
   def destroy
-    if @passage&.user == current_user
-      @passage.destroy
+    if @passage.destroy
       respond_to do |format|
-        format.html { redirect_to passages_url, notice: 'Passage was deleted.' }
+        format.html { redirect_to passages_url, notice: 'Passage deleted.' }
         # format.json { head :no_content }
       end
     else
       respond_to do |format|
-        format.html { redirect_to passages_url, notice: 'Only the passage owner may delete it.' }
+        format.html { redirect_to passages_url, notice: 'Unable to delete.' }
         # format.json { head :no_content }
       end
     end

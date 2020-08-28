@@ -1,42 +1,34 @@
 require 'nokogiri'
-require 'loofah'
 
 class ImportHtml
-  def cant_import(input_text, xml_doc)
-    "Base class does not import, it just supports subclasses."
+  def start_import(input_text, xml_doc, input_filename, user, err_msgs)
+    start_new_story input_text, xml_doc, input_filename, user, err_msgs
   end
 
-  def import_init(user)
-    @story = Story.new
-    @last_passage_link = "[[End of imported text]]"
-    @sequence = 0
-    @canvas_min = 100       # x and y value of first new position created
-    @canvas_max = 1500      # when x > canvas_max, wrap position to next row (x=canvas_min, y+=canvas_incremen)
-    @canvas_increment = 150 # space to leave between new positions
-    @px = @canvas_min       # x, y position of next passage's icon in the Twine passage display
-    @py = @canvas_min       # 
-
-    @story.user = user
-    @story.name = @xml_doc.at_css("title").inner_html
-    @story.stylesheet = @xml_doc.at_css("style").inner_html.strip
-    @story.story_format = StoryFormat.second
-    @escaper = EscapeAllButActiveText.new
-    rewrite_internal_links
+  def continue_import(input_text, xml_doc, input_filename, user, err_msgs)
   end
 
-  def rewrite_internal_links
-    # Rewrite links whose href starts with a # (meaning they link within the document) into Twine style.
+  def finish_import(err_msgs)
+    @story
+  end
+
+  def rewrite_all_internal_links(xml_doc)
+    xml_doc.css('a').each do |anchor|
+      rewrite_one_internal_link anchor
+    end
+  end
+
+  def rewrite_one_internal_link(anchor)
+    # Rewrite link whose href starts with a # (meaning they link within the document) into Twine style.
     # Example: rewrite this:
     # <a href="#anchor_name">label</a>
     # as:
     # [[label|anchor_name]]
-    @xml_doc.css('a').each do |anchor|
-      href = anchor.attributes['href']&.value
-      if href && href[0] == '#'
-        link_text = '[[' + (anchor.children[0]&.text || href[1..]) + '|' + href[1..] + ']]'
-        anchor.add_next_sibling Nokogiri::XML::Text.new(link_text, anchor.document)
-        anchor.remove
-      end
+    href = anchor.attributes['href']&.value
+    if href && href[0] == '#'
+      link_text = '[[' + (anchor.children[0]&.text || href[1..]) + '|' + href[1..] + ']]'
+      anchor.add_next_sibling new_text_node(link_text, anchor.document)
+      anchor.remove
     end
   end
 
@@ -45,7 +37,7 @@ class ImportHtml
     if passage_node
       passage_node.css('a').each do |anchor|
         name = anchor.attributes['name']&.value&.strip
-        if name&.length > 0
+        if name && name.length > 0
           return name
         end
       end
@@ -74,39 +66,34 @@ class ImportHtml
     return ls[0..line_end-1].strip
   end
 
-end
+  private
 
-  # Use loofah to escape HTML tags that we don't want ActiveText to manage
-  #
-  #     raw_html = "<em>em is handled natively in AT</em> <table>but table is not</table>"
-  #     Loofah.fragment(unsafe_html).scrub!(EscapeAllButActiveText)
-  #     => "<em>em is handled natively in AT</em> &lt;table&gt;but table is not&lt;/table&gt;"
-  #
-  class EscapeAllButActiveText < Loofah::Scrubber
-    ELEMENTS_UNESCAPED_IN_ACTIVETEXT = Set.new([ "del", "em", "pre", "strong" ])
-    ELEMENTS_TO_KEEP_NEWLINES_IN = Set.new([ "pre", "code" ])
-
-    def initialize
-      @direction = :top_down
-    end
-
-    def scrub(node)
-      case node.type
-      when Nokogiri::XML::Node::ELEMENT_NODE
-        if ELEMENTS_UNESCAPED_IN_ACTIVETEXT.include? node.name
-          return CONTINUE
-        end
-      when Nokogiri::XML::Node::TEXT_NODE, Nokogiri::XML::Node::CDATA_SECTION_NODE
-        return CONTINUE
-      end
-      new_text = node.to_s
-      new_text.gsub!("\r", '')
-      if !(ELEMENTS_TO_KEEP_NEWLINES_IN.include? node.name)
-         new_text.gsub!("\n", ' ')
-      end
-      node.add_next_sibling Nokogiri::XML::Text.new(new_text, node.document)
-      node.remove
-      return STOP
-    end
+  def new_text_node(link_text, xml_doc)
+    Nokogiri::XML::Text.new(link_text, xml_doc)
   end
 
+  def story_name_from_xml(xml_doc)
+    xml_doc&.at_css("title")&.inner_html&.strip
+  end
+
+  def stylesheet_from_xml(xml_doc)
+    xml_doc&.at_css("style")&.inner_html&.strip
+  end
+
+  def start_new_story(input_text, xml_doc, input_filename, user, err_msgs)
+    @story = Story.new
+    @sequence = 0
+    @canvas_min = 100       # x and y value of first new position created
+    @canvas_max = 1500      # when x > canvas_max, wrap position to next row (x=canvas_min, y+=canvas_incremen)
+    @canvas_increment = 150 # space to leave between new positions
+    @px = @canvas_min       # x, y position of next passage's icon in the Twine passage display
+    @py = @canvas_min       # 
+
+    @story.user = user
+    @story.name = story_name_from_xml(xml_doc)
+    @story.stylesheet = stylesheet_from_xml(xml_doc)
+    @story.story_format = StoryFormat.second # Default to Harlowe
+    @escaper = EscapeAllButActiveText.new
+    return false # Base class does not currently import.
+  end
+end

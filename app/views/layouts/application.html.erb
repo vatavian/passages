@@ -24,11 +24,6 @@
   <div class="container">
   <div class="navbar-brand">
     <a class="navbar-item" href="/"><h3 class="title">Passages</h3></a>
-    <div id="navbarBurger" class="navbar-burger burger" data-target="navMenuDocumentation">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
   </div>
 
   <div id="navMenu" class="navbar-menu">
@@ -49,8 +44,14 @@
             <a class="navbar-item" href="<%= passages_path(filter: 'mine') %>">
               <span>My Passages</span>
             </a>
+            <a class="navbar-item" href="<%= new_story_path %>">
+              <span>Start a New Story</span>
+            </a>
+            <a class="navbar-item" href="<%= new_import_path %>">
+              <span>Upload a Story</span>
+            </a>
             <a class="navbar-item" href="<%= settings_path %>">
-              <span>Settings</span>
+              <span>My Settings</span>
             </a>
             <div class="navbar-item">
             </div>
