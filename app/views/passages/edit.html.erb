@@ -1,8 +1,7 @@
 <%= render 'form', passage: @passage %>
 
-<%= if @passage.user == current_user
-      button_to 'Delete Passage', @passage, method: :delete,
-        class: "button is-danger is-small",
-        data: { confirm: "Delete #{@passage.name}?" }
-    end %>
-<%# link_to 'Cancel', @passage %> 
+<div class="pullup-buttons">
+<%= button_to 'Delete Passage', @passage, method: :delete,
+        class: "button is-danger is-pulled-right",
+        data: { confirm: "Delete #{@passage.name}?" } %> 
+</div>

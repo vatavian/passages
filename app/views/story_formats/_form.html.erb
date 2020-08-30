@@ -13,36 +13,36 @@
 
   <div class="field">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, class: "input is-primary" %>
   </div>
 
   <div class="field">
     <%= form.label :version %>
-    <%= form.text_field :version %>
+    <%= form.text_field :version, class: "input is-primary" %>
   </div>
 
   <div class="field">
     <%= form.label :author %>
-    <%= form.text_field :author %>
+    <%= form.text_field :author, class: "input is-primary" %>
   </div>
 
   <div class="field">
     If you have a Twine story that uses this format, you can upload it here instead of entering header and footer below:
     <p><%= form.file_field("uploaded_story") %></p>
-    If you get a format from a story, be sure to edit the format to replace the story's name in the header and footer with ~~story~~title~~
+    If you get a format from a story, be sure to edit the format to replace the story's name in the header and footer with {{STORY_NAME}}
   </div>
 
   <div class="field">
     <%= form.label :header %>
-    <%= form.text_area :header %>
+    <%= form.text_area :header, class: "textarea is-primary", style: "min-height: 20rem" %>
   </div>
 
   <div class="field">
     <%= form.label :footer %>
-    <%= form.text_area :footer %>
+    <%= form.text_area :footer, class: "textarea is-primary", style: "min-height: 20rem" %>
   </div>
 
   <div class="actions">
-    <%= form.submit "Save", class: "button" %>
+    <%= form.submit "Save", class: "button is-success" %>
   </div>
 <% end %>

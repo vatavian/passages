@@ -1,9 +1,9 @@
 <%= render 'form', story: @story %>
 
 <% if @story.user == current_user %>
-  <div class="buttons">
+<div class="pullup-buttons buttons is-pulled-right">
   <%=  button_to 'Delete Story', @story, method: :delete,
-       class: "button is-danger is-small",
+       class: "button is-danger",
        data: { confirm: "Delete #{@story.name}?" } %>
 
   <% passage_count = @story_passages&.length
@@ -12,10 +12,10 @@
        button_to 'Delete Story and its Passages',
          story_path(@story, destroy_passages: 'true'),
          method: :delete,
-         class: "button is-danger is-small",
+         class: "button is-danger",
          data: { confirm: confirm_prompt } %>
   <% end %>
-  </div>
+</div>
 <% end %>
 
 <%# link_to 'Cancel', @story %>

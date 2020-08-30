@@ -16,5 +16,12 @@ require("channels")
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-require("trix")
-require("@rails/actiontext")
+//require("trix")
+//require("@rails/actiontext")
+
+
+document.addEventListener('turbolinks:load', function() {
+        var el = document.getElementById("import_uploaded_files");
+        el && el.addEventListener("change", function() {
+                this.parentNode.submit(); })
+            })

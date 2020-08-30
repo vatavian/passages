@@ -3,6 +3,6 @@
        html: {multipart: true}) do |form| %>
 If you have a Twine story or a Project Gutenberg text in an HTML file, you can import it here: <br>
 <%= form.file_field("uploaded_files", multiple: true) %><br>
-<%= submit_tag("Upload") %>
+<%# form.submit "Upload", class: "button is-success" %>
 <% end %>
 </p>

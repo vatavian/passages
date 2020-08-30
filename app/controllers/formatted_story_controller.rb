@@ -3,8 +3,8 @@ class FormattedStoryController < ApplicationController
   before_action :set_story
 
   def show
-    @header = @story.story_format.header.sub("~~story~~title~~", @story.name)
-    @footer = @story.story_format.footer.sub("~~story~~title~~", @story.name)
+    @header = @story.story_format.header.gsub("{{STORY_NAME}}", @story.name)
+    @footer = @story.story_format.footer.gsub("{{STORY_NAME}}", @story.name)
     if @story.start_passage
       @startpid = @story.start_passage.uuid
     elsif @story.story_passages.length > 0

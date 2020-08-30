@@ -17,3 +17,8 @@
  */
 $desktop: 550px;
 @import "bulma";
+
+.pullup-buttons {
+    position: relative;
+    top: -2.5rem;
+}
