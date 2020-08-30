@@ -22,7 +22,7 @@ class Passage < ApplicationRecord
   end
 
   def content
-    body.content
+    body&.content
   end
 
   def content=(content)
