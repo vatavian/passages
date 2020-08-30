@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_19_201042) do
+ActiveRecord::Schema.define(version: 2020_08_29_174957) do
 
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -58,6 +58,8 @@ ActiveRecord::Schema.define(version: 2020_08_19_201042) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
     t.string "uuid", limit: 36
+    t.integer "body_id"
+    t.string "body_type", limit: 32
     t.index ["user_id"], name: "index_passages_on_user_id"
   end
 
@@ -98,6 +100,12 @@ ActiveRecord::Schema.define(version: 2020_08_19_201042) do
     t.string "size"
     t.index ["passage_id"], name: "index_story_passages_on_passage_id"
     t.index ["story_id"], name: "index_story_passages_on_story_id"
+  end
+
+  create_table "text_contents", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|

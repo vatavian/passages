@@ -1,11 +1,10 @@
 class ImportGutenbergHtml < ImportHtml
 
   def start_import(input_text, xml_doc, input_filename, user, err_msgs)
-@stop_prying = true
     scan_for = " PROJECT GUTENBERG "
     if input_text.index(scan_for)
       super
-      #@last_passage_link = '--End of imported text--'
+      @last_passage_link = "\n----End of imported text----"
       @prev_story_name = @story.name
       @index_name = "Index"
       @index_body = [@story.name + ' ' + @index_name + ' <br><ul>']
@@ -49,9 +48,9 @@ class ImportGutenbergHtml < ImportHtml
   end
 
   def finish_import(err_msgs)
-    #if @prev_passage 
-    #   @prev_passage.body = @prev_passage.body.to_s.sub(@last_passage_link, '')
-    #end
+    if @prev_passage
+       @prev_passage.content = @prev_passage.content.sub(@last_passage_link, '')
+    end
     @index_body << ["</ul>"]
     @story.start_passage = add_passage_to_story(@index_name, @index_body.join("\n"))
     return @story
@@ -75,9 +74,9 @@ class ImportGutenbergHtml < ImportHtml
           break if !name.blank?
         end
       end
-      #if !name&.index("End of Project")
-      #  body += @last_passage_link
-      #end if
+      if !name.index("End of Project")
+        body += @last_passage_link
+      end
       add_passage_to_story(name, body)
     end
   end
@@ -90,8 +89,7 @@ class ImportGutenbergHtml < ImportHtml
     else
        new_passage.name = passage_name
     end
-    new_passage.body = passage_body
-binding.pry unless @stop_prying
+    new_passage.content = passage_body
     story_passage_join = StoryPassage.new
     story_passage_join.passage = new_passage
     story_passage_join.sequence = (@sequence+=1).to_s
@@ -99,15 +97,14 @@ binding.pry unless @stop_prying
     @story.story_passages << story_passage_join
     @story.start_passage = new_passage if !@story.start_passage
 
-    #if @prev_passage
-    #   @prev_passage.body = @prev_passage.body.to_s.sub(@last_passage_link, 
-    #     "[[Next|" + new_passage.name + "]]")
-    #end
+    if @prev_passage
+       @prev_passage.content = @prev_passage.content.sub(@last_passage_link, 
+         "[[Next|" + new_passage.name + "]]")
+    end
     if new_passage.name != 'Index'
       @index_body << '<li>[[' + new_passage.name + ']]</li>'
     end
-    #@prev_passage = new_passage
-    new_passage
+    @prev_passage = new_passage
   end
 
   def get_passage_name(passage_xml)
@@ -133,5 +130,6 @@ binding.pry unless @stop_prying
         end
       end
     end
+    nil
   end
 end

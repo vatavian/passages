@@ -12,33 +12,35 @@
 
   <div class="field">
     <%= form.label :name %>
-    <%= form.text_field :name, size: 80 %>
+    <%= form.text_field :name, class: "input is-primary" %>
   </div>
 
   <div class="field">
     <%= form.label :story_format_id %>
     <%= form.select :story_format_id, StoryFormat.all.collect{|s| [s.name.to_s + ' ' + s.version.to_s, s.id]} %>
-    <%= link_to "All Story Formats", story_formats_path %>
+    <%= link_to "List Story Formats", story_formats_path %>
   </div>
 
   <div class="field">
     <%= form.label :ifid, "IFID" %>
-    <%= form.text_field :ifid, size: 40 %>
+    <%= form.text_field :ifid, class: "input is-primary" %>
   </div>
 
   <div class="field">
+    <%  css_style = "min-height: " + (story.stylesheet.to_s.length > 50 ? "16rem" : "2rem") %>
     <%= form.label :stylesheet %>
-    <%= form.text_area :stylesheet %>
+    <%= form.text_area :stylesheet, class: "textarea is-primary", style: css_style  %>
   </div>
 
   <div class="field">
+    <%  css_style = "min-height: " + (story.script.to_s.length > 50 ? "16rem" : "2rem") %>
     <%= form.label :script %>
-    <%= form.text_area :script %>
+    <%= form.text_area :script, class: "textarea is-primary", style: css_style %>
   </div>
 
   <div class="field">
     <%= form.label :start_passage_id, "Starting Passage" %>
-    <%= form.select :start_passage_id, @story_passages.collect{|s| [s.passage.user.email.to_s + ' ' + s.passage.name.to_s, s.passage.id]} %>
+    <%= form.select :start_passage_id, @story_passages.collect{|s| [s.passage.user.email.to_s + ' ' + s.passage.name.to_s, s.passage.id]}, class: "select is-primary" %>
   </div>
 
 <h2>Story Passages</h2>
@@ -90,6 +92,6 @@
 
 
   <div class="actions">
-    <%= form.submit "Save", class: "button" %>
+    <%= form.submit "Save", class: "button is-success" %>
   </div>
 <% end %>

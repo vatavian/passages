@@ -55,7 +55,7 @@ class ImportWebibleHtml < ImportHtml
         end
       end
 
-      new_passage.body = body
+      new_passage.content = body
       story_passage_join = StoryPassage.new
       story_passage_join.passage = new_passage
       story_passage_join.sequence = (@sequence+=1).to_s

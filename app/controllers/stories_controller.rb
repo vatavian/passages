@@ -30,7 +30,7 @@ class StoriesController < ApplicationController
   # GET /stories/1/edit
   def edit
     set_story_passages
-    @section_title = 'Edit ' + @story&.name
+    @section_title = 'Edit: ' + @story&.name
   end
 
   def fork

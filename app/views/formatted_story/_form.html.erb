@@ -3,7 +3,7 @@
 <script role="script" id="twine-user-script" type="text/twine-javascript"><%= raw @story.try(:script) %></script>
 <% @story.story_passages.order('sequence asc').includes(:passage).each do |story_passage| %>
 <%= raw format_passage_tag(story_passage) %>
-<%= raw format_passage_body(story_passage.passage.body) %>
+<%= raw format_passage_body(story_passage.passage) %>
 </tw-passagedata>
 <% end %>
 </tw-storydata>

@@ -17,7 +17,7 @@ class PassagesController < ApplicationController
       @passages = Passage.find_by_sql(
          "select passages.* from passages, story_passages where story_passages.story_id='" + story_id +
          "' and story_passages.passage_id=passages.id order by story_passages.sequence")
-      @section_title = 'Passages in ' + story_name
+      @section_title = 'Passages in: ' + story_name
     else
       @passages = Passage.all
       @section_title = 'All Passages'
@@ -37,7 +37,7 @@ class PassagesController < ApplicationController
 
   # GET /passages/1/edit
   def edit
-    @section_title = 'Edit ' + @passage&.name
+    @section_title = 'Edit: ' + @passage&.name
   end
 
   def fork
@@ -67,7 +67,6 @@ class PassagesController < ApplicationController
   def update
     respond_to do |format|
       if @passage.update(passage_params)
-binding.pry
         format.html { redirect_to @passage, notice: 'Passage updated.' }
         # format.json { render :show, status: :ok, location: @passage }
       else
@@ -114,7 +113,7 @@ binding.pry
 
   # Only allow a list of trusted parameters through.
   def passage_params
-    params.require(:passage).permit(:name, :body, :uuid)
+    params.require(:passage).permit(:name, :content, :uuid)
   end
 
   def new_passage

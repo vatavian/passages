@@ -14,7 +14,13 @@
         <td><%= story.name %></td>
         <td><%= story.user&.email %>
         <td><%= story.story_format&.name.to_s + ' ' + story.story_format&.version.to_s %></td>
-        <td><%= story.passages.count.to_s %></td>
+<td>
+<% if story.passages.count > 0 %>
+ <%= link_to story.passages.count.to_s, passages_path(filter: 'story_' + story.id.to_s + "_" + story.name) %>
+<% else %>
+ None
+<% end %>
+</td>
         <td><%= link_to 'Show', story %></td>
         <td><%= link_to 'Read', formatted_stories_path(id: story.id), target: "_blank" %>
         <% if current_user&.id == story.user_id %>

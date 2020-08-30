@@ -7,14 +7,13 @@ module FormattedStoryHelper
       '" size="' + story_passage.size.to_s + '">'
   end
 
-  # was: <%# raw CGI::escapeHTML(s_passage.passage.body.to_s) %>
-  def format_passage_body(passage_body)
-    txt = passage_body.to_s.gsub("&amp;", "&")
-    # Remove the outside div that Trix/ActiveText adds
-    if txt.sub!(/<div class="trix-content">\n\s*/, '')
-      enddiv = txt.index("</div>\n", -10)
-      txt = txt[0..enddiv-1] if enddiv
+  # was: <%# raw CGI::escapeHTML(s_passage.passage.content) %>
+  def format_passage_body(passage)
+    case passage.body_type 
+    when "TextContent"
+      passage.content.gsub("&amp;", "&")
+    else
+      passage.body_type + '#' + passage.body_id.to_s
     end
-    txt
   end
 end

@@ -5,7 +5,12 @@
 
 <p>
   <strong>Body:</strong>
-  <div class="message is-dark message-body"><%= @passage.body.to_s %></div>
+  <% case @passage.body_type %>
+  <% when "TextContent" %>
+    <div class="message is-dark message-body"><%= @passage.content %></div>
+  <% else %>
+    <div class="message is-dark message-body">[<%= @passage.body_type + '#' + @passage.body_id.to_s %>]</div>
+  <% end %>
 </p>
 <p>
   <strong>Created:</strong>

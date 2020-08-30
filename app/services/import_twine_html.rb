@@ -117,8 +117,8 @@ class ImportTwineHtml
     same_body = false
     existing_story_passage = find_existing_story_passage(imported_story, passage_name, pid, user)
     if existing_story_passage
-      existing_body = existing_story_passage.passage.body.to_s
-      existing_body = format_passage_body(existing_body)
+      existing_body = existing_story_passage.content
+      #existing_body = format_passage_body(existing_body)
       same_body = (new_passage_body.strip == existing_body.strip)
     end
 
@@ -129,15 +129,15 @@ class ImportTwineHtml
         Rails.logger.debug "Import: passage identical to existing passage: " + imported_passage.name
       else
         Rails.logger.debug "Import: new body for passage: " + imported_passage.name
-        #Rails.logger.debug "Old: '" + existing_story_passage.passage.body.to_s + "'"
+        #Rails.logger.debug "Old: '" + existing_story_passage.passage.content + "'"
         #Rails.logger.debug "New: '" + new_passage_body + "'"
-        imported_passage.body = new_passage_body
+        imported_passage.content = new_passage_body
       end
     else # Need to make a new Passage because didn't have one before or can't edit another user's
       imported_passage = Passage.new
       imported_passage.user = user
       imported_passage.name = passage_name
-      imported_passage.body = new_passage_body
+      imported_passage.content = new_passage_body
       imported_passage.uuid = pid if pid.length == 36
 
       story_passage_join = StoryPassage.new
