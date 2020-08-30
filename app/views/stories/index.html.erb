@@ -16,7 +16,7 @@
         <td><%= story.story_format&.name.to_s + ' ' + story.story_format&.version.to_s %></td>
 <td>
 <% if story.passages.count > 0 %>
- <%= link_to story.passages.count.to_s, passages_path(filter: 'story_' + story.id.to_s + "_" + story.name) %>
+ <%= link_to story.passages.count.to_s, passages_path(filter: 'story_' + story.id.to_s) %>
 <% else %>
  None
 <% end %>

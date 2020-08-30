@@ -9,24 +9,6 @@
   </thead>
 
   <tbody>
-    <% if @current_story 
-         short_story_name = @current_story.name
-         if short_story_name.length > 15
-           short_story_name = short_story_name[0..12] + '...'
-         end
-         add_label = 'Add to ' + short_story_name
-         remove_label = 'Remove from ' + short_story_name
-         current_story_passages = {}
-         StoryPassage.find_by_sql(
-           "select id, passage_id from story_passages where story_id='" +
-           @current_story.id.to_s + "'").each { |sp| current_story_passages[sp.passage_id] = sp }
-         if current_story_passages.empty?
-           current_story_passages = nil
-         end
-       else
-         current_story_passages = nil
-       end %>
-
     <% @passages.each do |passage| %>
     <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
       <td>
@@ -48,15 +30,14 @@
         <td><%= button_to 'Copy and Edit', fork_passage_path(passage), method: :post, class: "button is-small" %></td>
       <% end %>
 
-      <% if current_story_passages %>
+      <% if @current_story_passages %>
         <td>
-        <% story_passage = current_story_passages[passage.id] %>
-        <% if story_passage %>
-          <%= button_to remove_label, story_passage, method: :delete, class: "button is-danger is-small", data:
+        <% if story_passage = @current_story_passages[passage.id] %>
+          <%= button_to @remove_label, story_passage, method: :delete, class: "button is-danger is-small", data:
             { confirm: 'Remove passage from story?' } %>
         <% else %>
-          <%= button_to add_label,
-              story_passages_path(story_id: @current_story.id, passage_id: passage.id) %>
+          <%= button_to @add_label,
+              story_passages_path(story_id: @current_story.id, passage_id: passage.id), class: "button is-small" %>
         <% end %>
         </td>
       <% end %>

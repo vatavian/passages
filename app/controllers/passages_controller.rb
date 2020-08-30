@@ -3,6 +3,7 @@ class PassagesController < ApplicationController
   before_action :set_passage, only: [:show, :edit, :fork, :update, :destroy]
   before_action :authorize_passage_editor, only: [:edit, :update, :destroy]
   before_action :set_current_story, only: [:index, :new, :create]
+  before_action :set_current_story_passages, only: [:index]
   before_action :new_passage, only: [:new, :create]
 
   # GET /passages
@@ -11,13 +12,14 @@ class PassagesController < ApplicationController
     if params[:filter] == 'mine'
       @passages = Passage.where(user_id: current_user.id)
       @section_title = 'My Passages'
-    elsif params[:filter] =~ /^story_(.+?)_(.+)$/
-      story_id = $1
-      story_name = $2
-      @passages = Passage.find_by_sql(
-         "select passages.* from passages, story_passages where story_passages.story_id='" + story_id +
-         "' and story_passages.passage_id=passages.id order by story_passages.sequence")
-      @section_title = 'Passages in: ' + story_name
+    elsif params[:filter] =~ /^user_(.+?)$/ && filter_user = User.find_by(id: $1)
+      @passages = Passage.where(user_id: filter_user.id)
+      @section_title = filter_user.email + "'s Passages"
+    elsif params[:filter] =~ /^story_(.+?)$/ && filter_story = Story.find_by(id: $1)
+      @passages = Passage.joins(:story_passages)
+        .where("story_passages.story_id=?", filter_story.id).order("story_passages.sequence")
+        .includes(:user)
+      @section_title = 'Passages in: ' + filter_story.name
     else
       @passages = Passage.all
       @section_title = 'All Passages'
@@ -95,7 +97,28 @@ class PassagesController < ApplicationController
   private
 
   def set_current_story
+    # Find the user's story they most recently visited. 
+    # New passages are added to this story and passages in this story are displayed differently in index.
     @current_story = Story.find_by(id: session[:story_id])
+  end
+
+  def set_current_story_passages
+    # Find the passages in @current_story so they can be displayed differently in index.
+    if @current_story 
+      short_story_name = @current_story.name
+      if short_story_name.length > 15
+        short_story_name = short_story_name[0..12] + '...'
+      end
+      @add_label = 'Add to ' + short_story_name
+      @remove_label = 'Remove from ' + short_story_name
+      @current_story_passages = {}
+      StoryPassage.where(story_id: @current_story.id).each { |sp| @current_story_passages[sp.passage_id] = sp }
+      if @current_story_passages.empty?
+        @current_story_passages = nil
+      end
+    else
+      @current_story_passages = nil
+    end
   end
 
   def set_passage

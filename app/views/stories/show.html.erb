@@ -23,7 +23,7 @@
 <p>
   <strong>Passages:</strong>
 <% if @story.passages.count > 0 %>
- <%= link_to 'View list of ' + @story.passages.count.to_s + ' passages', passages_path(filter: 'story_' + @story.id.to_s + "_" + @story.name) %>
+ <%= link_to 'View list of ' + @story.passages.count.to_s + ' passages', passages_path(filter: 'story_' + @story.id.to_s) %>
 <% else %>
  None
 <% end %>
