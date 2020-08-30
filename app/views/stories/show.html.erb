@@ -28,9 +28,21 @@
  None
 <% end %>
 </p>
-<p><%= link_to 'Read', formatted_stories_path(id: @story.id), target: "_blank" %></p>
+<section class="section" style="padding: 1rem 1rem; padding-left: 0rem;">
+<% StoryFormat.all.collect do |s| %>
+  <p>
+  <%= raw '<strong>' if s.id == @story.story_format_id %>
+  <%= link_to "Read using " + s.name.to_s + ' ' + s.version.to_s,
+           formatted_stories_path(id: @story.id, format: s.id), target: "_blank" %>
+  <%= raw '</strong> (default format)' if s.id == @story.story_format_id %>
+  </p>
+<% end %>  
+</section>
+
 <% if current_user&.id == @story.user.id %>
+<section class="section" style="padding: 1rem 1rem; padding-left: 0rem;">
 <p><%= link_to 'Edit', edit_story_path(@story) %></p>
 <p><%= link_to 'Edit Flow', flows_path(id: @story.id) %></p>
 <p><%= link_to 'Add New Passage', new_passage_path %></p>
+</section>
 <% end %>
