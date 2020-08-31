@@ -18,7 +18,6 @@ class PassagesController < ApplicationController
     elsif params[:filter] =~ /^story_(.+?)$/ && filter_story = Story.find_by(id: $1)
       @passages = Passage.joins(:story_passages)
         .where("story_passages.story_id=?", filter_story.id).order("story_passages.sequence")
-        .includes(:user)
       @section_title = 'Passages in: ' + filter_story.name
     else
       @passages = Passage.all

@@ -13,6 +13,10 @@ class StoriesController < ApplicationController
     elsif params[:filter] =~ /^user_(.+?)$/ && filter_user = User.find_by(id: $1)
       @stories = Story.where(user_id: filter_user.id)
       @section_title = filter_user.email + "'s Stories"
+    elsif params[:filter] =~ /^passage_(.+?)$/ && filter_passage = Passage.find_by(id: $1)
+      @stories = Story.joins(:story_passages)
+        .where("story_passages.passage_id=?", filter_passage.id)
+      @section_title = 'Stories Containing Passage: ' + filter_passage.name
     else
       @stories = Story.all
       @section_title = 'All Stories'

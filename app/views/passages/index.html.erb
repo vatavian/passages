@@ -21,6 +21,9 @@
   </thead>
 
   <tbody>
+    <% if @passages.empty? %>
+    <tr><td>No passages found.</td></tr>
+    <% end %>
     <% @passages.each do |passage| %>
       <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
         <% @cols.keys.each do |ch| %>

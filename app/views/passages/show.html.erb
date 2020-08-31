@@ -38,7 +38,7 @@
     <%= link_to 'New Passage', new_passage_path %>
   </li>
 <% end %>
-  <li>
-    <%= link_to 'Index', passages_path %>
-  </li>
+  <li><%= link_to 'Stories containing this passage', stories_path(filter: 'passage_' + @passage.id.to_s) %></li>
+  <li><%= link_to 'Passage Index', passages_path %></li>
 </ul>
+

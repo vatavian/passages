@@ -16,6 +16,9 @@
   </thead>
 
   <tbody>
+    <% if @stories.empty? %>
+    <tr><td>No stories found.</td></tr>
+    <% end %>
     <% @stories.each do |story| %>
       <tr>
         <% @cols.keys.each do |ch| %>
