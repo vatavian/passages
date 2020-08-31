@@ -1,9 +1,11 @@
 <table class="bd-spacing-table table">
   <thead>
     <tr>
-      <th><%= link_to 'Name', stories_path(filter: params[:filter], sort: 'na') %></th>
-      <th><%= link_to 'User', stories_path(filter: params[:filter], sort: 'oa') %></th>
-      <th><%= link_to 'Story format', stories_path(filter: params[:filter], sort: 'fa') %></th>
+      <% @cols.values.each do |col| %>
+        <% col_sort = col.sort_char + 'a' %>
+        <% col_sort = col.sort_char + 'd' if col_sort == params[:sort] %>
+        <th><%= link_to col.label, stories_path(filter: params[:filter], sort: col_sort) %></th>
+      <% end %>
       <th>Passages</th>
     </tr>
   </thead>
@@ -11,9 +13,9 @@
   <tbody>
     <% @stories.each do |story| %>
       <tr>
-        <td><%= story.name %></td>
-        <td><%= story.user&.email %>
-        <td><%= story.story_format&.name.to_s + ' ' + story.story_format&.version.to_s %></td>
+        <% @cols.values.each do |col| %>
+          <td><%= col.row_blk.call story %></td>
+        <% end %>
 <td>
 <% passage_count = story.passages.count %>
 <% if passage_count > 0 %>

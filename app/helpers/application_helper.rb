@@ -1,4 +1,14 @@
 module ApplicationHelper
+  class Colm
+    attr_reader   :sort_char, :field, :label, :row_blk
+    def initialize(sort_char,  field,  label,  row_blk)
+      @sort_char = sort_char
+      @field = field
+      @label = label
+      @row_blk = row_blk
+    end
+  end
+
   def show_timestamp(utc_date)
     dt = utc_date.getlocal
     now = Time.now.getlocal

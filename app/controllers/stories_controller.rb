@@ -1,8 +1,10 @@
+
 class StoriesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_story, only: [:show, :edit, :fork, :update, :destroy]
   before_action :authorize_story_editor, only: [:edit, :update, :destroy]
   before_action :new_story, only: [:new, :create]
+  #include ApplicationHelper
 
   # GET /stories
   # GET /stories.json
@@ -15,19 +17,19 @@ class StoriesController < ApplicationController
       @section_title = 'All Stories'
     end
     @stories = @stories.joins(:user).joins(:story_format)
+    @cols = {
+      'n' => Colm.new('n', 'name',       'Name',    -> story { story.name }),
+    # 'c' => Colm.new('c', 'created_at', 'Created', -> story { show_timestamp(story.created_at) }),
+    # 'u' => Colm.new('u', 'updated_at', 'Updated', -> story { show_timestamp(story.updated_at) }),
+      'o' => Colm.new('o', 'users.email', 'User',   -> story { story.user&.email }),
+      'f' => Colm.new('f', 'story_formats.name',
+                           'Story format',          -> story { story.story_format&.name.to_s + ' ' +
+                                                               story.story_format&.version.to_s })
+    }
     if params[:sort]
       order = params[:sort][1] == 'd' ? ' desc' : ' asc'
-      case params[:sort][0]
-      when 'n'
-        @stories = @stories.order('name' + order)
-      when 'c'
-        @stories = @stories.order('created_at' + order)
-      when 'u'
-        @stories = @stories.order('updated_at' + order)
-      when 'o'
-        @stories = @stories.order('users.email' + order)
-      when 'f'
-        @stories = @stories.order('story_formats.name' + order)
+      if sort_col = @cols[params[:sort][0]]
+        @stories = @stories.order(sort_col.field + order)
       end
     end
   end
