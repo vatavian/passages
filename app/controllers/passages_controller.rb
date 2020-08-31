@@ -24,6 +24,22 @@ class PassagesController < ApplicationController
       @passages = Passage.all
       @section_title = 'All Passages'
     end
+    @passages = @passages.includes(:user)
+    @cols = {
+      'n' => 'name',
+      'c' => 'created_at',
+      'u' => 'updated_at',
+      'o' => 'users.email',
+      's' => nil,
+      'a' => nil,
+      'e' => nil
+    }
+    if params[:sort]
+      order = params[:sort][1] == 'd' ? ' desc' : ' asc'
+      if sort_col = @cols[params[:sort][0]]
+        @passages = @passages.order(sort_col + order)
+      end
+    end
   end
 
   # GET /passages/1
@@ -107,7 +123,7 @@ class PassagesController < ApplicationController
     if @current_story 
       short_story_name = @current_story.name
       if short_story_name.length > 15
-        short_story_name = short_story_name[0..12] + '...'
+        short_story_name = short_story_name[0..11] + '...'
       end
       @add_label = 'Add to ' + short_story_name
       @remove_label = 'Remove from ' + short_story_name

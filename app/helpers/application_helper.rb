@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def show_timestamp(utc_date)
+  def show_timestamp(utc_date, compare_date=nil)
     dt = utc_date.getlocal
     now = Time.now.getlocal
     if dt.year == now.year
@@ -14,6 +14,10 @@ module ApplicationHelper
       dt_format = current_user&.date_format_other_year || "%Y %b %-d %-k:%M"
     end
     zone = current_user&.time_zone || "UTC"
-    time_tag(dt, dt.in_time_zone(zone).strftime(dt_format))
+    if compare_date == utc_date
+      time_tag(dt, dt.in_time_zone(zone).strftime(dt_format), style: "color:gray")
+    else
+      time_tag(dt, dt.in_time_zone(zone).strftime(dt_format))
+    end
   end
 end

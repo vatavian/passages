@@ -1,8 +1,8 @@
-<% col_labels = { 'n' => 'Name',
+<% col_labels = { 'n' => 'Story Name',
                   'c' => 'Created',
                   'u' => 'Updated',
                   'o' => 'User',
-                  'f' => 'Story format',
+                  'f' => 'Story Format',
                   'p' => 'Passages' } %>
 <table class="bd-spacing-table table">
   <thead>
@@ -25,7 +25,7 @@
                   when 'c'
                     show_timestamp(story.created_at)
                   when 'u'
-                    show_timestamp(story.updated_at)
+                    show_timestamp(story.updated_at, story.created_at)
                   when 'o'
                     story.user&.email
                   when 'f'
