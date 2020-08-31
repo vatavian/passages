@@ -1,4 +1,3 @@
-
 class StoriesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_story, only: [:show, :edit, :fork, :update, :destroy]
@@ -11,6 +10,9 @@ class StoriesController < ApplicationController
     if params[:filter] == 'mine'
       @stories = Story.where(user_id: current_user.id)
       @section_title = 'My Stories'
+    elsif params[:filter] =~ /^user_(.+?)$/ && filter_user = User.find_by(id: $1)
+      @stories = Story.where(user_id: filter_user.id)
+      @section_title = filter_user.email + "'s Stories"
     else
       @stories = Story.all
       @section_title = 'All Stories'
