@@ -14,6 +14,22 @@ class StoriesController < ApplicationController
       @stories = Story.all
       @section_title = 'All Stories'
     end
+    @stories = @stories.joins(:user).joins(:story_format)
+    if params[:sort]
+      order = params[:sort][1] == 'd' ? ' desc' : ' asc'
+      case params[:sort][0]
+      when 'n'
+        @stories = @stories.order('name' + order)
+      when 'c'
+        @stories = @stories.order('created_at' + order)
+      when 'u'
+        @stories = @stories.order('updated_at' + order)
+      when 'o'
+        @stories = @stories.order('users.email' + order)
+      when 'f'
+        @stories = @stories.order('story_formats.name' + order)
+      end
+    end
   end
 
   # GET /stories/1

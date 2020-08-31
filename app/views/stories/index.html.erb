@@ -1,9 +1,9 @@
 <table class="bd-spacing-table table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>User</th>
-      <th>Story format</th>
+      <th><%= link_to 'Name', stories_path(filter: params[:filter], sort: 'na') %></th>
+      <th><%= link_to 'User', stories_path(filter: params[:filter], sort: 'oa') %></th>
+      <th><%= link_to 'Story format', stories_path(filter: params[:filter], sort: 'fa') %></th>
       <th>Passages</th>
     </tr>
   </thead>
@@ -15,8 +15,9 @@
         <td><%= story.user&.email %>
         <td><%= story.story_format&.name.to_s + ' ' + story.story_format&.version.to_s %></td>
 <td>
-<% if story.passages.count > 0 %>
- <%= link_to story.passages.count.to_s, passages_path(filter: 'story_' + story.id.to_s) %>
+<% passage_count = story.passages.count %>
+<% if passage_count > 0 %>
+ <%= link_to passage_count.to_s, passages_path(filter: 'story_' + story.id.to_s) %>
 <% else %>
  None
 <% end %>
