@@ -1,10 +1,15 @@
+<% col_labels = { 'n' => 'Name',
+                  'c' => 'Created',
+                  'u' => 'Updated',
+                  'o' => 'User',
+                  'f' => 'Story format' } %>
 <table class="bd-spacing-table table">
   <thead>
     <tr>
-      <% @cols.values.each do |col| %>
-        <% col_sort = col.sort_char + 'a' %>
-        <% col_sort = col.sort_char + 'd' if col_sort == params[:sort] %>
-        <th><%= link_to col.label, stories_path(filter: params[:filter], sort: col_sort) %></th>
+      <% @cols.keys.each do |ch| %>
+        <% col_sort = ch + 'a' %>
+        <% col_sort = ch + 'd' if col_sort == params[:sort] %>
+        <th><%= link_to col_labels[ch], stories_path(filter: params[:filter], sort: col_sort) %></th>
       <% end %>
       <th>Passages</th>
     </tr>
@@ -13,8 +18,20 @@
   <tbody>
     <% @stories.each do |story| %>
       <tr>
-        <% @cols.values.each do |col| %>
-          <td><%= col.row_blk.call story %></td>
+        <% @cols.keys.each do |ch| %>
+          <td><%= case ch
+                  when 'n'
+                    story.name
+                  when 'c'
+                    show_timestamp(story.created_at)
+                  when 'u'
+                    show_timestamp(story.updated_at)
+                  when 'o'
+                    story.user&.email
+                  when 'f'
+                    story.story_format&.name.to_s + ' ' +
+                    story.story_format&.version.to_s
+                  end %></td>
         <% end %>
 <td>
 <% passage_count = story.passages.count %>

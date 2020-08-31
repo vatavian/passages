@@ -18,18 +18,16 @@ class StoriesController < ApplicationController
     end
     @stories = @stories.joins(:user).joins(:story_format)
     @cols = {
-      'n' => Colm.new('n', 'name',       'Name',    -> story { story.name }),
-    # 'c' => Colm.new('c', 'created_at', 'Created', -> story { show_timestamp(story.created_at) }),
-    # 'u' => Colm.new('u', 'updated_at', 'Updated', -> story { show_timestamp(story.updated_at) }),
-      'o' => Colm.new('o', 'users.email', 'User',   -> story { story.user&.email }),
-      'f' => Colm.new('f', 'story_formats.name',
-                           'Story format',          -> story { story.story_format&.name.to_s + ' ' +
-                                                               story.story_format&.version.to_s })
+      'n' => 'name',
+      'c' => 'created_at',
+      'u' => 'updated_at',
+      'o' => 'users.email',
+      'f' => 'story_formats.name'
     }
     if params[:sort]
       order = params[:sort][1] == 'd' ? ' desc' : ' asc'
       if sort_col = @cols[params[:sort][0]]
-        @stories = @stories.order(sort_col.field + order)
+        @stories = @stories.order(sort_col + order)
       end
     end
   end
