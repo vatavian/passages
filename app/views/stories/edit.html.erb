@@ -6,7 +6,7 @@
        class: "button is-danger",
        data: { confirm: "Delete #{@story.name}?" } %>
 
-  <% passage_count = @story_passages&.length
+  <% passage_count = @story.story_passages_count
      if passage_count > 0 %>
        <%= confirm_prompt = "Delete #{@story.name} and its #{passage_count} passages?"
        button_to 'Delete Story and its Passages',

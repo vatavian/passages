@@ -68,14 +68,13 @@
   <div class="field">
     <%= form.label nil, "Story Passages", class: "label" %>
     <div class="control">
-      <% if @story_passages&.count > 0 %>
-      <%= link_to 'View list of ' + @story_passages.count.to_s + ' passages',
+      <% if story.story_passages_count > 0 %>
+      <%= link_to 'View list of ' + story.story_passages_count.to_s + ' passages',
           passages_path(filter: 'story_' + story.id.to_s) %>
       <% else %>
       None
       <% end %>
     </div>
-    <%= link_to '+ Add New Passage', new_passage_path %>
   </div>
 
   <div class="actions">

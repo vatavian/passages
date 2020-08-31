@@ -36,7 +36,7 @@ Rails.logger.debug imp_class.name + " can import " + input_filename.to_s
     story = story_importer&.finish_import err_msgs
     respond_to do |format|
       if story&.save
-        err_msgs << story.story_passages.count.to_s + " passages now in story " + story.name.to_s
+        err_msgs << story.story_passages_count.to_s + " passages now in story " + story.name.to_s
         format.html { redirect_to story, notice: err_msgs&.join("\n") }
       else
         err_msgs << "Error saving story: " + story&.errors&.inspect.to_s

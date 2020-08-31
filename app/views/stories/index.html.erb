@@ -2,7 +2,8 @@
                   'c' => 'Created',
                   'u' => 'Updated',
                   'o' => 'User',
-                  'f' => 'Story format' } %>
+                  'f' => 'Story format',
+                  'p' => 'Passages' } %>
 <table class="bd-spacing-table table">
   <thead>
     <tr>
@@ -11,7 +12,6 @@
         <% col_sort = ch + 'd' if col_sort == params[:sort] %>
         <th><%= link_to col_labels[ch], stories_path(filter: params[:filter], sort: col_sort) %></th>
       <% end %>
-      <th>Passages</th>
     </tr>
   </thead>
 
@@ -31,16 +31,16 @@
                   when 'f'
                     story.story_format&.name.to_s + ' ' +
                     story.story_format&.version.to_s
+                  when 'p'
+                    passage_count = story.story_passages_count
+                    if passage_count > 0
+                      link_to passage_count.to_s, passages_path(filter: 'story_' + story.id.to_s)
+                    else
+                      "None"
+                    end
                   end %></td>
         <% end %>
-<td>
-<% passage_count = story.passages.count %>
-<% if passage_count > 0 %>
- <%= link_to passage_count.to_s, passages_path(filter: 'story_' + story.id.to_s) %>
-<% else %>
- None
-<% end %>
-</td>
+
         <td><%= link_to 'Show', story %></td>
         <td><%= link_to 'Read', formatted_stories_path(id: story.id), target: "_blank" %>
         <% if current_user&.id == story.user_id %>

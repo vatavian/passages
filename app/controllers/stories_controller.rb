@@ -4,7 +4,6 @@ class StoriesController < ApplicationController
   before_action :set_story, only: [:show, :edit, :fork, :update, :destroy]
   before_action :authorize_story_editor, only: [:edit, :update, :destroy]
   before_action :new_story, only: [:new, :create]
-  #include ApplicationHelper
 
   # GET /stories
   # GET /stories.json
@@ -16,13 +15,14 @@ class StoriesController < ApplicationController
       @stories = Story.all
       @section_title = 'All Stories'
     end
-    @stories = @stories.joins(:user).joins(:story_format)
+    @stories = @stories.includes(:user, :story_format)
     @cols = {
       'n' => 'name',
       'c' => 'created_at',
       'u' => 'updated_at',
       'o' => 'users.email',
-      'f' => 'story_formats.name'
+      'f' => 'story_formats.name',
+      'p' => 'story_passages_count'
     }
     if params[:sort]
       order = params[:sort][1] == 'd' ? ' desc' : ' asc'
