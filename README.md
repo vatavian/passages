@@ -1,24 +1,13 @@
-# README
+# Passages is a website supporting reading and writing of stories that may be branching and interactive.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Authors may work alone or may collaborate or reuse parts of the writing of others, with permission and attribution.
 
-Things you may want to cover:
+Including quotes, excerpts, or entire public domain works such as [Project Gutenberg](https://www.gutenberg.org/) books and the [World English Bible](https://worldenglish.bible/) is supported.
 
-* Ruby version
+The code is still pre-alpha and has not yet been deployed in a production environment.
 
-* System dependencies
+It is being built using Rails 6, Ruby 2.6, and Bulma styles.
 
-* Configuration
+A lightly customized version of [twinejs](https://github.com/klembot/twinejs) 2.3 is included. It has been modified to read a story from the dom at startup, go directly to story edit view, and send an edited version back to Passages with a new button. 
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[Twine](https://twinery.org) is a big inspiration for this project. Importing your own existing Twine stories is implemented and saving in Twine HTML format is the default way to read a Passages story. 
