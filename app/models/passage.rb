@@ -16,8 +16,6 @@ class Passage < ApplicationRecord
     new_passage.user_id = user_id
     new_passage.name = name
     new_passage.body = body
-    new_passage.uuid = nil
-    generate_uuid
     new_passage
   end
 

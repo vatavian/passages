@@ -91,7 +91,7 @@ class ImportHtml
 
     @story.user = user
     @story.name = story_name_from_xml(xml_doc)
-    @story.stylesheet = stylesheet_from_xml(xml_doc)
+    @story.style_s = stylesheet_from_xml(xml_doc)
     @story.story_format = StoryFormat.second # Default to Harlowe
     @escaper = EscapeAllButActiveText.new
     return false # Base class does not currently import.

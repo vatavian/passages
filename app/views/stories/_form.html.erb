@@ -42,10 +42,10 @@
   </div>
 
   <div class="field">
-    <%= form.label :stylesheet, class: "label" %>
+    <%= form.label :style_s, "Style", class: "label" %>
     <div class="control">
-      <%= form.text_area :stylesheet, class: "textarea is-primary",
-          style: "min-height: " + (story.stylesheet.to_s.length > 50 ? "16rem" : "2rem") %>
+      <%= form.text_area :style_s, class: "textarea is-primary",
+          style: "min-height: " + (story.style_s.length > 50 ? "16rem" : "2rem") %>
     </div>
   </div>
 

@@ -62,7 +62,7 @@ class ImportTwineHtml
     sequence = 0
     @story_xml.children.each do |story_child|
       case story_child.name
-      when "style" then story.stylesheet = story_child.content.to_s.strip
+      when "style" then story.style_s = story_child.content.to_s.strip
       when "script" then story.script = story_child.content.to_s.strip
       when "tw-passagedata"
         if !import_passage(story_child, story, start_pid, sequence, user)
